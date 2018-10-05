@@ -31,7 +31,7 @@ module.exports = (app) => {
 
   // Delete voter by id
   app.delete("/voter/:id", function(req,res) {
-    db.Article
+    db.Voter
       .findById({ _id: req.params.id })
       .then(dbModel => dbModel.remove())
       .then(dbModel => res.json(dbModel))
@@ -40,7 +40,7 @@ module.exports = (app) => {
 
   // Update voter info
   app.put("/voter/:id", function(req,res) {
-    db.Article
+    db.Voter
       .findOneAndUpdate({ _id: req.params.id }, req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
