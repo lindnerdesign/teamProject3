@@ -18,12 +18,12 @@ module.exports = (app) => {
         "candidateId":9490
       }
     }).then(result => {
-      // console.log(`API result: ${JSON.stringify(result.data)}`)
-      parseString(result.data, function(err,jsonres) {
-        console.log(`json: ${JSON.stringify(jsonres)}`)
-        return res.json(jsonres);
+        // console.log(`API result: ${JSON.stringify(result.data)}`)
+        parseString(result.data, function(err,jsonres) {
+          console.log(`json: ${JSON.stringify(jsonres)}`)
+          return res.json(jsonres);
       })
-    })
+    }).catch(err => res.status(422).json(err));
   });
 
   // Google Civic Route
@@ -39,9 +39,31 @@ module.exports = (app) => {
       console.log('Civic')
       console.log(result.data)
       return res.json(result.data);
-    })
+    }).catch(err => res.status(422).json(err));
   })
 
+  // Listen Notes Route
+  app.get("/listen", function(req,res){
+    let query = "https://listennotes.p.mashape.com/api/v1/search";
+
+    axios.get(query, {
+      params: {
+        "genre_ids": "99,117",
+        "language": "English",
+        "q": "2018 elections",
+        "sort_by_date": 1
+      },
+      headers: {
+        "X-Mashape-Key": keysFile.listennotes.key,
+        "Accept": "application/json"
+      }
+    }).then(result => {
+      console.log('Listen')
+      console.log(result.data)
+      return res.json(result.data);
+    }).catch(err => res.status(422).json(err));
+  })
+  
   // Database Routes
   // Find
   app.get("/voter", function(req,res){

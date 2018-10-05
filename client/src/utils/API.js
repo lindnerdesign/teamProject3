@@ -9,6 +9,9 @@ export default {
   apiCivic: function() {
     return axios.get("/civic");
   },
+  apiListenNotes: function() {
+    return axios.get("/listen");
+  },
   // Database apis
   // Gets voter info
   getVoters: function() {
