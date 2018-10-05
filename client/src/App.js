@@ -5,7 +5,7 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
-  testAPI = event => {
+  testVoteSmart = event => {
 
     let query = "http://api.votesmart.org/CandidateBio.getBio";
 
@@ -16,6 +16,21 @@ class App extends Component {
       }
     }).then(result => {
       console.log(`API result: ${JSON.stringify(result)}`)
+    })
+
+  };
+
+  testCivic = event => {
+
+    let query = "https://www.googleapis.com/civicinfo/v2/representatives";
+
+    axios.get(query, {
+      params: {
+        "key": "AIzaSyCdIEBO6FRk7y-5NsmCyAQPyGMh0Qru2tA",
+        "address": "4139 Garfield Minneapolis MN"
+      }
+    }).then(result => {
+      console.log(`Google Civic result: ${JSON.stringify(result)}`)
     })
 
   };
@@ -31,11 +46,18 @@ class App extends Component {
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
         <Button
-          onClick={this.testAPI}
+          onClick={this.testVoteSmart}
           style={{ float: "center", marginBottom: 10 }}
           className={"btn btn-success"}
         >
-          Test API
+          Test Vote Smart
+        </Button>
+        <Button
+          onClick={this.testCivic}
+          style={{ float: "center", marginBottom: 10 }}
+          className={"btn btn-success"}
+        >
+          Test Civic
         </Button>
 
       </div>
