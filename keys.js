@@ -5,4 +5,8 @@ exports.votesmart = {
 exports.civic = {
     key: process.env.GOOGLE_CIVIC_KEY
 };
+
+exports.listennotes = {
+    key: process.env.LISTEN_NOTES_KEY
+}
   

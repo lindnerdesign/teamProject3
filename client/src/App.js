@@ -24,6 +24,14 @@ class App extends Component {
     })
   };
 
+  testListenNotes = event => {
+    API.apiListenNotes()
+    .then(result => {
+      console.log(`Listen Notes result: ${JSON.stringify(result)}`)
+    })
+  };
+
+
   render() {
     return (
       <div className="App">
@@ -44,6 +52,13 @@ class App extends Component {
           className={"btn btn-success"}
         >
           Test Civic
+        </Button>
+        <Button
+          onClick={this.testListenNotes}
+          style={{ float: "center", marginBottom: 10 }}
+          className={"btn btn-success"}
+        >
+          Test Listen Notes
         </Button>
 
       </div>
