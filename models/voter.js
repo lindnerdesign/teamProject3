@@ -2,10 +2,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const voterSchema = new Schema({
-  line1: { type: String},
-  city: { type: String},
-  state: {type: String},
-  zip: {type: String}
+  address: {
+    line1: { type: String},
+    city: { type: String},
+    state: {type: String},
+    zip: {type: String}
+  },
+  pollingLocation: {
+    locationName:String, 
+    line1:String, 
+    city:String, 
+    state:String, 
+    zip:String
+  }
   // date: { type: Date, default: Date.now }
 });
 

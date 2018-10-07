@@ -14,8 +14,13 @@ class Home extends Component {
     state: "",
     zip:"",
 
-    pollingLocation: [],
+    plocationName:"",
+    pline1:"",
+    pcity:"",
+    pstate:"",
+    pzip:"",
 
+    // Can you save object to react state?
     voterInfo: {
       address: {
         line1: "",
@@ -36,10 +41,34 @@ class Home extends Component {
   testCivic = () => {
     const address = `${this.state.line1} ${this.state.city} ${this.state.state} ${this.state.zip}`
     console.log(address)
+    // Get polling location address
     API.apiCivic(address)
     .then(res => {
       // console.log(`Google Civic result: ${JSON.stringify(res)}`)
-      this.setState({pollingLocation:res.data.pollingLocations[0].address})
+      // Save polling address to state
+      this.setState({
+        plocationName:res.data.pollingLocations[0].address.locationName,
+        pline1:res.data.pollingLocations[0].address.line1,
+        pcity:res.data.pollingLocations[0].address.city,
+        pstate:res.data.pollingLocations[0].address.state,
+        pzip:res.data.pollingLocations[0].address.zip
+      })
+      // Save voter address and polling location to db
+      this.saveVoter({
+        address: {
+          line1: this.state.line1,
+          city: this.state.city,
+          state: this.state.state,
+          zip: this.state.zip
+        },
+        pollingLocation: {
+          locationName:res.data.pollingLocations[0].address.locationName,
+          line1:res.data.pollingLocations[0].address.line1,
+          city:res.data.pollingLocations[0].address.city,
+          state:res.data.pollingLocations[0].address.state,
+          zip:res.data.pollingLocations[0].address.zip
+        }
+      })
       console.log(` Your polling place: ${JSON.stringify(res.data.pollingLocations[0].address)}`)
       return res;
     })
@@ -68,16 +97,7 @@ class Home extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-
     this.testCivic();
-    console.log(`state polling: ${JSON.stringify(this.state.pollingLocation)}`)
-    this.saveVoter({
-      line1: this.state.line1,
-      city: this.state.city,
-      state: this.state.state,
-      zip: this.state.zip
-      // pollingLocation: this.state.pollingLocation
-    })
   };
 
   render() {
