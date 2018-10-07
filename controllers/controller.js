@@ -28,12 +28,13 @@ module.exports = (app) => {
 
   // Google Civic Route
   app.get("/civic", function(req,res){
-    let query = "https://www.googleapis.com/civicinfo/v2/representatives";
+    console.log(req.query.address)
+    let query = "https://www.googleapis.com/civicinfo/v2/voterinfo";
 
     axios.get(query, {
       params: {
         "key": keysFile.civic.key,
-        "address": "4139 Garfield Minneapolis MN"
+        "address": req.query.address
       }
     }).then(result => {
       console.log('Civic')

@@ -6,8 +6,13 @@ export default {
     return axios.get("/voteSmart");   
   },
   // Google Civic api
-  apiCivic: function() {
-    return axios.get("/civic");
+  apiCivic: function(address) {
+    console.log(address)
+    return axios.get("/civic", {
+      params: {
+        address:address
+      }
+    });
   },
   apiListenNotes: function() {
     return axios.get("/listen");

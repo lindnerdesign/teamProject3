@@ -3,25 +3,49 @@ import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 import Candidate from "../components/Candidate";
 import Podcast from "../components/Podcast";
+import Button from "../components/Button";
+import Row from "../components/Row";
+import Col from "../components/Col";
 
 class Home extends Component {
   state = {
-    voterInfo: {}
+    line1: "",
+    city: "",
+    state: "",
+    zip:"",
+
+    pollingLocation: {},
+
+    voterInfo: {
+      address: {
+        line1: "",
+        city: "",
+        state: "",
+        zip:""
+      }
+    }
   }
 
   testVoteSmart = event => {
     API.apiVoteSmart()
     .then(result => {
       console.log(`VoteSmart result: ${JSON.stringify(result)}`)
-      // this.setState({voterInfo: res});
     })
   };
 
   testCivic = event => {
-    API.apiCivic()
-    .then(result => {
-      console.log(`Google Civic result: ${JSON.stringify(result)}`)
+    event.preventDefault();
+
+    const address = `${this.state.line1} ${this.state.city} ${this.state.state} ${this.state.zip}`
+    console.log(address)
+    API.apiCivic(address)
+    .then(res => {
+      // console.log(`Google Civic result: ${JSON.stringify(res)}`)
+      this.setState({pollingLocation:res.data.pollingLocations[0].address})
+      console.log(` Your polling place: ${JSON.stringify(res.data.pollingLocations[0].address)}`)
+      return res;
     })
+    .catch(err => console.log(err));
   };
 
   testListenNotes = event => {
@@ -31,15 +55,39 @@ class Home extends Component {
     })
   };
 
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  };
+
+  handleFormSubmit = event => {
+    event.preventDefault();
+
+    // Get articles via nyt api
+    // API.apiArticles(this.state.topic, this.state.startDate, this.state.endDate)
+    //   .then(res => {
+    //     this.setState({ results: res, topic: "", startDate: "", endDate: "" })
+    //   })
+    //   .catch(err => console.log(err));
+  };
+
   render() {
     return (
       
       <div className="test">
-      <SearchForm />
-      <Candidate />
-      <Podcast />
-
-        {/* <Button
+        <Row>
+          <Col size="md-12">
+            <SearchForm
+              handleFormSubmit={this.testCivic}
+              handleInputChange={this.handleInputChange}
+            ></SearchForm>
+            <Candidate />
+            <Podcast />
+          </Col>
+        </Row>
+        <Button
           onClick={this.testVoteSmart}
           style={{ float: "center", marginBottom: 10 }}
           className={"btn btn-success"}
