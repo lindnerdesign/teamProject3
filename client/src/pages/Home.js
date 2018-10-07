@@ -33,9 +33,7 @@ class Home extends Component {
     })
   };
 
-  testCivic = event => {
-    event.preventDefault();
-
+  testCivic = () => {
     const address = `${this.state.line1} ${this.state.city} ${this.state.state} ${this.state.zip}`
     console.log(address)
     API.apiCivic(address)
@@ -65,12 +63,7 @@ class Home extends Component {
   handleFormSubmit = event => {
     event.preventDefault();
 
-    // Get articles via nyt api
-    // API.apiArticles(this.state.topic, this.state.startDate, this.state.endDate)
-    //   .then(res => {
-    //     this.setState({ results: res, topic: "", startDate: "", endDate: "" })
-    //   })
-    //   .catch(err => console.log(err));
+    this.testCivic();
   };
 
   render() {
@@ -80,7 +73,7 @@ class Home extends Component {
         <Row>
           <Col size="md-12">
             <SearchForm
-              handleFormSubmit={this.testCivic}
+              handleFormSubmit={this.handleFormSubmit}
               handleInputChange={this.handleInputChange}
             ></SearchForm>
             <Candidate />
@@ -93,13 +86,6 @@ class Home extends Component {
           className={"btn btn-success"}
         >
           Test Vote Smart
-        </Button>
-        <Button
-          onClick={this.testCivic}
-          style={{ float: "center", marginBottom: 10 }}
-          className={"btn btn-success"}
-        >
-          Test Civic
         </Button>
         <Button
           onClick={this.testListenNotes}
