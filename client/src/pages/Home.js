@@ -14,7 +14,7 @@ class Home extends Component {
     state: "",
     zip:"",
 
-    pollingLocation: {},
+    pollingLocation: [],
 
     voterInfo: {
       address: {
@@ -53,6 +53,12 @@ class Home extends Component {
     })
   };
 
+  saveVoter = (voterInfo) => {
+    API.saveVoter(voterInfo)
+      .then(res => console.log("Voter Info Saved"))
+      .catch(err => console.log(err));
+  }
+
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -64,6 +70,14 @@ class Home extends Component {
     event.preventDefault();
 
     this.testCivic();
+    console.log(`state polling: ${JSON.stringify(this.state.pollingLocation)}`)
+    this.saveVoter({
+      line1: this.state.line1,
+      city: this.state.city,
+      state: this.state.state,
+      zip: this.state.zip
+      // pollingLocation: this.state.pollingLocation
+    })
   };
 
   render() {

@@ -28,7 +28,7 @@ module.exports = (app) => {
 
   // Google Civic Route
   app.get("/civic", function(req,res){
-    console.log(req.query.address)
+    // console.log(req.query.address)
     let query = "https://www.googleapis.com/civicinfo/v2/voterinfo";
 
     axios.get(query, {
@@ -38,7 +38,7 @@ module.exports = (app) => {
       }
     }).then(result => {
       console.log('Civic')
-      console.log(result.data)
+      // console.log(result.data)
       return res.json(result.data);
     }).catch(err => res.status(422).json(err));
   })
@@ -84,6 +84,8 @@ module.exports = (app) => {
 
   // Save voter info
   app.post("/voter", (req,res) => {
+    console.log(`save voter`)
+    console.log(req.body)
     db.Voter
       .create(req.body)
       .then(dbModel => res.json(dbModel))
