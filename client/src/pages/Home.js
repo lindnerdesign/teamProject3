@@ -7,7 +7,10 @@ import Button from "../components/Button";
 import Row from "../components/Row";
 import Col from "../components/Col";
 
+
 class Home extends Component {
+  electionId = "";
+
   state = {
     line1: "",
     city: "",
@@ -32,10 +35,7 @@ class Home extends Component {
   }
 
   callVoteSmart = (query) => {
-    API.apiVoteSmart(query)
-    .then(result => {
-      console.log(`VoteSmart result: ${JSON.stringify(result)}`)
-    })
+      return API.apiVoteSmart(query)
   };
 
   testCivic = () => {
@@ -87,7 +87,12 @@ class Home extends Component {
       command: "Election.getElectionByZip",
       params: {zip5:zip}
     }
-    this.callVoteSmart(query);
+
+    this.callVoteSmart(query).then (res => {
+      console.log(`res: ${JSON.stringify(res)}`)
+      this.electionId = res.data.elections.election[0].electionId;
+      console.log(`electionId: ${this.electionId}`)
+    })
   }
 
   saveVoter = (voterInfo) => {
@@ -124,13 +129,6 @@ class Home extends Component {
             <Podcast />
           </Col>
         </Row>
-        {/* <Button
-          onClick={this.testVoteSmart}
-          style={{ float: "center", marginBottom: 10 }}
-          className={"btn btn-success"}
-        >
-          Test Vote Smart
-        </Button> */}
         <Button
           onClick={this.testListenNotes}
           style={{ float: "center", marginBottom: 10 }}

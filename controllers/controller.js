@@ -24,10 +24,10 @@ module.exports = (app) => {
       params: params
       }
     ).then(result => {
-        console.log(`API result: ${JSON.stringify(result.data)}`)
+        // console.log(`API result: ${JSON.stringify(result.data)}`)
         // Convert xml to JSON
         parseString(result.data, function(err,jsonres) {
-          console.log(`json: ${JSON.stringify(jsonres)}`)
+          // console.log(`json: ${JSON.stringify(jsonres)}`)
           return res.json(jsonres);
       })
     }).catch(err => res.status(422).json(err));
