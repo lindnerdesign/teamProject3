@@ -31,8 +31,8 @@ class Home extends Component {
     }
   }
 
-  testVoteSmart = event => {
-    API.apiVoteSmart()
+  callVoteSmart = (query) => {
+    API.apiVoteSmart(query)
     .then(result => {
       console.log(`VoteSmart result: ${JSON.stringify(result)}`)
     })
@@ -82,6 +82,14 @@ class Home extends Component {
     })
   };
 
+  getElectionId = (zip) => {
+    const query = {
+      command: "Election.getElectionByZip",
+      params: {zip5:zip}
+    }
+    this.callVoteSmart(query);
+  }
+
   saveVoter = (voterInfo) => {
     API.saveVoter(voterInfo)
       .then(res => console.log("Voter Info Saved"))
@@ -97,7 +105,9 @@ class Home extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    this.testCivic();
+    // this.testCivic();
+    this.getElectionId(this.state.zip);
+
   };
 
   render() {
@@ -114,13 +124,13 @@ class Home extends Component {
             <Podcast />
           </Col>
         </Row>
-        <Button
+        {/* <Button
           onClick={this.testVoteSmart}
           style={{ float: "center", marginBottom: 10 }}
           className={"btn btn-success"}
         >
           Test Vote Smart
-        </Button>
+        </Button> */}
         <Button
           onClick={this.testListenNotes}
           style={{ float: "center", marginBottom: 10 }}

@@ -10,15 +10,22 @@ module.exports = (app) => {
 
   // Vote Smart Route
   app.get("/voteSmart", function(req,res) {
-    let query = "http://api.votesmart.org/CandidateBio.getBio";
+    // console.log(`voteSmart req.query:`)
+    // console.log(req.query)
+    let query = `http://api.votesmart.org/${req.query.command}`;
+    // console.log(`query`)
+    // console.log(query)
+
+    // Convert query.params to an object, combine two objects to create new params object for api query
+    const params = {"key": keysFile.votesmart.key, ...JSON.parse(req.query.params)}
+    console.log(params);
 
     axios.get(query, {
-      params: {
-        "key": keysFile.votesmart.key,
-        "candidateId":9490
+      params: params
       }
-    }).then(result => {
-        // console.log(`API result: ${JSON.stringify(result.data)}`)
+    ).then(result => {
+        console.log(`API result: ${JSON.stringify(result.data)}`)
+        // Convert xml to JSON
         parseString(result.data, function(err,jsonres) {
           console.log(`json: ${JSON.stringify(jsonres)}`)
           return res.json(jsonres);
