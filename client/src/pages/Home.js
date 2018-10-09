@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import API from "../utils/API";
-// import Card from "../components/Card";
-// import Alert from "../components/Alert";
-import Button from "../components/Button";
+import SearchForm from "../components/SearchForm";
+import Candidate from "../components/Candidate";
+import Podcast from "../components/Podcast";
 
 class Home extends Component {
   state = {
@@ -33,8 +33,13 @@ class Home extends Component {
 
   render() {
     return (
+      
       <div className="test">
-        <Button
+      <SearchForm />
+      <Candidate />
+      <Podcast />
+
+        {/* <Button
           onClick={this.testVoteSmart}
           style={{ float: "center", marginBottom: 10 }}
           className={"btn btn-success"}
@@ -54,7 +59,7 @@ class Home extends Component {
           className={"btn btn-success"}
         >
           Test Listen Notes
-        </Button>
+        </Button> */}
 
       </div>
     );
