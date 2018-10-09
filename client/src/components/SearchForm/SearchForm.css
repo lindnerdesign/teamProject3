@@ -1,9 +1,19 @@
 form.search {
-  overflow: auto;
-  margin-bottom: 10px;
+  margin: auto;
+  width: 70%;
+  align-content: center;
 }
 
-form.search button[type="submit"] {
+.form-control {
+  margin: 0px 0 10px 0;
+}
+
+#address {
   float: right;
   margin-top: 10px;
+}
+
+.addressheader {
+  margin-top: 50px;
+  margin-bottom: 40px;
 }
