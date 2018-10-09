@@ -9,8 +9,9 @@ import Col from "../components/Col";
 
 
 class Home extends Component {
+  stageId = "G";
   electionId = "";
-
+  
   state = {
     line1: "",
     city: "",
@@ -87,11 +88,16 @@ class Home extends Component {
       command: "Election.getElectionByZip",
       params: {zip5:zip}
     }
+    return this.callVoteSmart(query)
+  }
 
+  getStageCandidates = (electionId, stageId) => {
+    const query = {
+      command: "Election.getStageCandidates",
+      params: {electionId:electionId, stageId:stageId}
+    }
     this.callVoteSmart(query).then (res => {
-      console.log(`res: ${JSON.stringify(res)}`)
-      this.electionId = res.data.elections.election[0].electionId;
-      console.log(`electionId: ${this.electionId}`)
+      console.log(`Candidates: ${JSON.stringify(res)}`)
     })
   }
 
@@ -111,8 +117,12 @@ class Home extends Component {
   handleFormSubmit = event => {
     event.preventDefault();
     // this.testCivic();
-    this.getElectionId(this.state.zip);
 
+    this.getElectionId(this.state.zip).then (res => {
+      this.electionId = res.data.elections.election[0].electionId[0];
+      console.log(`b4 getStage electionId: ${this.electionId}`)
+      this.getStageCandidates(this.electionId,this.stageId)
+    })
   };
 
   render() {
@@ -135,8 +145,7 @@ class Home extends Component {
           className={"btn btn-success"}
         >
           Test Listen Notes
-        </Button> */}
-
+        </Button>
       </div>
     );
   }
