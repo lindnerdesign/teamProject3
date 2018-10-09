@@ -2,7 +2,6 @@ import React from "react";
 import "./SearchForm.css";
 import {Button} from "react-bootstrap";
 
-// Using the datalist element we can create autofill suggestions based on the props.breeds array
 const SearchForm = props => (
   
   <form className="search">
@@ -10,46 +9,44 @@ const SearchForm = props => (
     <div className="form-group">
       <label htmlFor="fulladdress">Please fill out your address here</label>
       <input
-        value=""
-        onChange=""
-        name="address"
+        value={props.line1}
+        onChange={props.handleInputChange}
+        name="line1"
         type="text"
         className="form-control"
-        placeholder="Street Name"
-        id="street"
+        placeholder="Street"
       />
-        
       <input
-        value=""
-        onChange=""
+        value={props.city}
+        onChange={props.handleInputChange}
         name="city"
         type="text"
         className="form-control"
-        placeholder="City Name"
-        id="city"
+        placeholder="City"
       />
-
-       <input
-        value=""
-        onChange=""
+      <input
+        value={props.state}
+        onChange={props.handleInputChange}
         name="state"
         type="text"
         className="form-control"
         placeholder="State"
-        id="state"
       />
-
-       <input
-        value=""
-        onChange=""
-        name="address"
+      <input
+        value={props.zip}
+        onChange={props.handleInputChange}
+        name="zip"
         type="text"
         className="form-control"
-        placeholder="Street Name"
-        id="street"
+        placeholder="Zip"
       />
-
-      <Button bsStyle="danger" id="address">Submit</Button>
+      <button
+        type="submit"
+        onClick={props.handleFormSubmit}
+        className="btn btn-success"
+      >
+        Search
+      </button>
     </div>
   </form>
 );
