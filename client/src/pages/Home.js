@@ -24,15 +24,7 @@ class Home extends Component {
     pstate:"",
     pzip:"",
 
-    // Can you save object to react state?
-    voterInfo: {
-      address: {
-        line1: "",
-        city: "",
-        state: "",
-        zip:""
-      }
-    }
+    candidates: []
   }
 
   
@@ -89,22 +81,33 @@ class Home extends Component {
     })
   };
 
-  getElectionId = (zip) => {
+  getCandidates = (zip, stageId) => {
     const query = {
-      command: "Election.getElectionByZip",
-      params: {zip5:zip}
+      command: "Candidates.getByZip",
+      params: {zip5:zip, stageId:stageId}
     }
     return this.callVoteSmart(query)
   }
 
-  getStageCandidates = (electionId, stageId) => {
-    const query = {
-      command: "Election.getStageCandidates",
-      params: {electionId:electionId, stageId:stageId}
-    }
-    this.callVoteSmart(query).then (res => {
-      console.log(`Candidates: ${JSON.stringify(res)}`)
+  parseCandidates = (candidates) => {
+    let pCandidates = candidates.map(candidate => {
+      const candidateObj = {
+        candidateId:candidate.candidateId[0],
+        ballotName:candidate.ballotName[0],
+        electionParties:candidate.electionParties[0],
+        electionDistrictId:candidate.electionDistrictId[0],
+        electionDistrictName:candidate.electionDistrictName[0],
+        electionOffice:candidate.electionOffice[0],
+        electionOfficeId:candidate.electionOfficeId[0],
+        electionDate:candidate.electionDate[0],
+        runningMateId:candidate.runningMateId[0],
+        runningMateName:candidate.runningMateName[0]
+      }
+      return candidateObj
     })
+    console.log(`pCandidates: ${JSON.stringify(pCandidates)}`)
+    // Save the candidate list to state
+    this.setState({candidates:pCandidates})
   }
 
   saveVoter = (voterInfo) => {
@@ -124,10 +127,10 @@ class Home extends Component {
     event.preventDefault();
     // this.testCivic();
 
-    this.getElectionId(this.state.zip).then (res => {
-      this.electionId = res.data.elections.election[0].electionId[0];
-      console.log(`b4 getStage electionId: ${this.electionId}`)
-      this.getStageCandidates(this.electionId,this.stageId)
+    this.getCandidates(this.state.zip, this.stageId).then (res => {
+      // console.log(`candidates by zip: ${JSON.stringify(res)}`)
+      // If candidate list != 0, parse response into an object
+      res.data.candidateList.candidate.length &&  this.parseCandidates(res.data.candidateList.candidate)
     })
   };
 
