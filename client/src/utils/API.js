@@ -1,7 +1,10 @@
 import axios from "axios";
 
+
+axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
 export default {
   // VoteSmart api
+
   apiVoteSmart: function(query) {
     return axios.get("/voteSmart", {
       params: query

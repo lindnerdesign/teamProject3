@@ -35,10 +35,16 @@ class Home extends Component {
     }
   }
 
+  
   callVoteSmart = (query) => {
       return API.apiVoteSmart(query)
   };
 
+  logout = () => {
+    localStorage.removeItem('jwtToken');
+    window.location.reload();
+  };
+  
   testCivic = () => {
     const address = `${this.state.line1} ${this.state.city} ${this.state.state} ${this.state.zip}`
     console.log(address)
