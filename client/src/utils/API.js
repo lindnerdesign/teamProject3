@@ -24,19 +24,29 @@ export default {
   },
   // Database apis
   // Gets voter info
-  getVoters: function() {
-    return axios.get("/voter");
+  getVoter: function(query) {
+    return axios.get("/voter", {
+      params:query
+    });
   },
-  // Gets voter info with the given id
-  getVoter: function(id) {
-    return axios.get("/voter/" + id);
+  // Find voter info with the given id
+  getVoterById: function(id) {
+    return axios.get(`/voter/${id}`);
+  },
+  // Find candidate
+  getCandidateById: function(id) {
+    return axios.get(`/candidate/${id}`);
   },
   // Deletes voter info with the given id
   deleteVoter: function(id) {
-    return axios.delete("/voter/" + id);
+    return axios.delete(`{/voter/${id}`);
   },
   // Saves an article to the database
   saveVoter: function(voterData) {
     return axios.post("/voter", voterData);
+  },
+  // Save candidate info to database
+  saveCandidate: function(candidateData) {
+    return axios.post("/candidate", candidateData);
   }
 };

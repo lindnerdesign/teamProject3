@@ -12,10 +12,6 @@ const candidateSchema = new Schema({
   electionDate: {type: String},
   runningMateId: {type: String},
   runningMateName: {type: String},
-  voter: {
-    type: Schema.Types.ObjectId,
-    ref: "Voter"
-  }
 });
 
 const Candidate = mongoose.model("Candidate", candidateSchema);

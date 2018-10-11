@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const voterSchema = new Schema({
+  id: { type: String},
   address: {
     line1: { type: String},
     city: { type: String},
@@ -14,7 +15,11 @@ const voterSchema = new Schema({
     city:String, 
     state:String, 
     zip:String
-  }
+  },
+  candidate: [{
+    type: Schema.Types.ObjectId,
+    ref: "Candidate"
+  }]
   // date: { type: Date, default: Date.now }
 });
 

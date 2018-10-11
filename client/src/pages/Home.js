@@ -10,7 +10,7 @@ import Col from "../components/Col";
 
 class Home extends Component {
   stageId = "G";
-  electionId = "";
+  voterId = "Virginia";
   
   state = {
     line1: "",
@@ -37,7 +37,7 @@ class Home extends Component {
     window.location.reload();
   };
   
-  testCivic = () => {
+  callCivic = () => {
     const address = `${this.state.line1} ${this.state.city} ${this.state.state} ${this.state.zip}`
     console.log(address)
     // Get polling location address
@@ -52,24 +52,7 @@ class Home extends Component {
         pstate:res.data.pollingLocations[0].address.state,
         pzip:res.data.pollingLocations[0].address.zip
       })
-      // Save voter address and polling location to db
-      this.saveVoter({
-        address: {
-          line1: this.state.line1,
-          city: this.state.city,
-          state: this.state.state,
-          zip: this.state.zip
-        },
-        pollingLocation: {
-          locationName:res.data.pollingLocations[0].address.locationName,
-          line1:res.data.pollingLocations[0].address.line1,
-          city:res.data.pollingLocations[0].address.city,
-          state:res.data.pollingLocations[0].address.state,
-          zip:res.data.pollingLocations[0].address.zip
-        }
-      })
       console.log(` Your polling place: ${JSON.stringify(res.data.pollingLocations[0].address)}`)
-      return res;
     })
     .catch(err => console.log(err));
   };
@@ -110,10 +93,43 @@ class Home extends Component {
     this.setState({candidates:pCandidates})
   }
 
-  saveVoter = (voterInfo) => {
-    API.saveVoter(voterInfo)
-      .then(res => console.log("Voter Info Saved"))
+  saveVoter = event => {
+    // Check if voter already saved in db
+    const query = {id:this.voterId}
+    API.getVoter(query)
+      .then (voterDB => {
+        console.log(`voterDB: ${JSON.stringify(voterDB)}`)
+        if (voterDB.data.length) {
+          console.log(`Voter in db`)
+          return voterDB.data;
+        }
+        else {
+          // Save voter address and polling location to db
+          const voterObj = {
+            id: this.voterId,
+            address: {
+              line1: this.state.line1,
+              city: this.state.city,
+              state: this.state.state,
+              zip: this.state.zip
+            },
+            pollingLocation: {
+              locationName:this.state.plocationName,
+              line1:this.state.pline1,
+              city:this.state.pcity,
+              state:this.state.pstate,
+              zip:this.state.pzip
+            }
+          }
+          return API.saveVoter(voterObj);
+        }
+      })
       .catch(err => console.log(err));
+
+  }
+
+  saveCandidate = (candidate) => {
+    // Under construction....
   }
 
   handleInputChange = event => {
@@ -125,12 +141,14 @@ class Home extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    // this.testCivic();
+    this.callCivic();
 
     this.getCandidates(this.state.zip, this.stageId).then (res => {
       // console.log(`candidates by zip: ${JSON.stringify(res)}`)
       // If candidate list != 0, parse response into an object
-      res.data.candidateList.candidate.length &&  this.parseCandidates(res.data.candidateList.candidate)
+      if (res.data.candidateList.candidate.length) {
+        this.parseCandidates(res.data.candidateList.candidate)
+      }  
     })
   };
 
@@ -144,6 +162,12 @@ class Home extends Component {
               handleFormSubmit={this.handleFormSubmit}
               handleInputChange={this.handleInputChange}
             ></SearchForm>
+            <Button
+              onClick={this.saveVoter}
+              className={"btn btn-primary"}
+            >
+              Test Save Voter Info
+            </Button>
             <Candidate />
             <Podcast />
           </Col>

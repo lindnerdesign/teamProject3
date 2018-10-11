@@ -81,13 +81,21 @@ module.exports = (app) => {
       .catch(err => res.status(422).json(err));
   });
 
-  // Find by id
+  // Find voter by id
   app.get("/voter/:id", function(req, res) {
     db.Voter
       .findById(req.params.id)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   });
+
+  // Find candidate by id
+  app.get("/candidate/:id", function(req, res) {
+    db.Candidate
+    .findById(req.params.id)
+    .then(dbModel => res.json(dbModel))
+    .catch(err => res.status(422).json(err))
+  })
 
   // Save voter info
   app.post("/voter", (req,res) => {
@@ -97,6 +105,14 @@ module.exports = (app) => {
       .create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
+  })
+
+  // Save candidate info
+  app.post("/candidate", (req,res) => {
+    db.Candidate
+      .create(req.body)
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err))
   })
 
   // Delete voter by id
