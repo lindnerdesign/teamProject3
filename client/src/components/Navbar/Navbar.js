@@ -1,7 +1,8 @@
 import React from "react";
 // import { Link } from "react-router-dom";
-import "./NavBar.css";
+import "./Navbar.css";
 import {Navbar, Nav, NavItem, Button} from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 // Depending on the current path, this component sets the "active" class on the appropriate navigation link item
 const NavBar = () => (
@@ -24,7 +25,7 @@ const NavBar = () => (
     </Nav>
 
     <Navbar.Form pullRight>
-    <Button bsStyle="danger">Sign In</Button>
+    <Link bsStyle="danger" to="/login">Sign In</Link>
     </Navbar.Form>
 
   </Navbar.Collapse>
