@@ -1,3 +1,4 @@
 module.exports = {
-  Voter: require("./voter")
+  Voter: require("./voter"),
+  Candidate: require("./candidate")
 };

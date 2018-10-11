@@ -14,7 +14,7 @@ const SearchForm = props => (
         name="line1"
         type="text"
         className="form-control"
-        placeholder="Street"
+        placeholder="Street Address"
       />
       <input
         value={props.city}
