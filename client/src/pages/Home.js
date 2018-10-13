@@ -6,80 +6,79 @@ import Podcast from "../components/Podcast";
 import Button from "../components/Button";
 import Row from "../components/Row";
 import Col from "../components/Col";
-import { get } from "https";
 import '../pages/Home.css';
 
 
 class Home extends Component {
   stageId = "G";
   _id = "0";
-  
-  state = {
-    voterName: "",
+   username ="";
 
+  state = {
+    firstName: "",
+    lastName: "",
+    username: "",
     line1: "",
     city: "",
     state: "",
-    zip:"",
-
-    plocationName:"",
-    pline1:"",
-    pcity:"",
-    pstate:"",
-    pzip:"",
-
+    zip: "",
     candidates: []
   }
 
   componentDidMount() {
+
     this.loadVoter();
+  }
+  componentDidUpdate() {
+    this.username = this.props.match.params;
+    console.log(this.username);
   }
 
   callVoteSmart = (query) => {
-      return API.apiVoteSmart(query)
+    return API.apiVoteSmart(query)
   };
 
   logout = () => {
     localStorage.removeItem('jwtToken');
     window.location.reload();
   };
-  
+
   callCivic = () => {
     const address = `${this.state.line1} ${this.state.city} ${this.state.state} ${this.state.zip}`
     console.log(address)
     // Get polling location address
     API.apiCivic(address)
-    .then(res => {
-      // console.log(`Google Civic result: `, res)
-      if (res.data.hasOwnProperty("pollingLocations")) {
-        // Save polling address to state
-        this.setState({
-          plocationName:res.data.pollingLocations[0].address.locationName,
-          pline1:res.data.pollingLocations[0].address.line1,
-          pcity:res.data.pollingLocations[0].address.city,
-          pstate:res.data.pollingLocations[0].address.state,
-          pzip:res.data.pollingLocations[0].address.zip
-        })
-        console.log(` Your polling place: `,res.data.pollingLocations[0].address)
-      }
-      else {
-        console.log("Polling location not available")
-      }
-    })
-    .catch(err => console.log(err));
+      .then(res => {
+        // console.log(`Google Civic result: `, res)
+        if (res.data.hasOwnProperty("pollingLocations")) {
+          // Save polling address to state
+          this.setState({
+            plocationName: res.data.pollingLocations[0].address.locationName,
+            pline1: res.data.pollingLocations[0].address.line1,
+            pcity: res.data.pollingLocations[0].address.city,
+            pstate: res.data.pollingLocations[0].address.state,
+            pzip: res.data.pollingLocations[0].address.zip
+          })
+          console.log(` Your polling place: `, res.data.pollingLocations[0].address)
+        }
+        else {
+          console.log("Polling location not available")
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   testListenNotes = event => {
     API.apiListenNotes()
-    .then(result => {
-      console.log(`Listen Notes result: `, result)
-    })
+      .then(result => {
+        console.log(`Listen Notes result: `, result)
+      })
   };
 
   getCandidates = (zip, stageId) => {
     const query = {
       command: "Candidates.getByZip",
-      params: {zip5:zip, stageId:stageId}
+      params: { zip5: zip, stageId: stageId }
     }
     return this.callVoteSmart(query)
   }
@@ -87,76 +86,76 @@ class Home extends Component {
   parseCandidates = (candidates) => {
     let pCandidates = candidates.map(candidate => {
       return this.getCandidateBio(candidate.candidateId[0])
-      .then (res => {
-        const candidateObj = {
-          candidateId:candidate.candidateId[0],
-          ballotName:candidate.ballotName[0],
-          electionParties:candidate.electionParties[0],
-          electionDistrictId:candidate.electionDistrictId[0],
-          electionDistrictName:candidate.electionDistrictName[0],
-          electionOffice:candidate.electionOffice[0],
-          electionOfficeId:candidate.electionOfficeId[0],
-          electionDate:candidate.electionDate[0],
-          runningMateId:candidate.runningMateId[0],
-          runningMateName:candidate.runningMateName[0],
-          birthDate:res.data.bio.candidate[0].birthDate[0],
-          birthPlace:res.data.bio.candidate[0].birthPlace[0],
-          family:res.data.bio.candidate[0].family[0],
-          homeCity:res.data.bio.candidate[0].homeCity[0],
-          homeState:res.data.bio.candidate[0].homeState[0],
-          religion:res.data.bio.candidate[0].religion[0]
-        }
-        return candidateObj
-      })
+        .then(res => {
+          const candidateObj = {
+            candidateId: candidate.candidateId[0],
+            ballotName: candidate.ballotName[0],
+            electionParties: candidate.electionParties[0],
+            electionDistrictId: candidate.electionDistrictId[0],
+            electionDistrictName: candidate.electionDistrictName[0],
+            electionOffice: candidate.electionOffice[0],
+            electionOfficeId: candidate.electionOfficeId[0],
+            electionDate: candidate.electionDate[0],
+            runningMateId: candidate.runningMateId[0],
+            runningMateName: candidate.runningMateName[0],
+            birthDate: res.data.bio.candidate[0].birthDate[0],
+            birthPlace: res.data.bio.candidate[0].birthPlace[0],
+            family: res.data.bio.candidate[0].family[0],
+            homeCity: res.data.bio.candidate[0].homeCity[0],
+            homeState: res.data.bio.candidate[0].homeState[0],
+            religion: res.data.bio.candidate[0].religion[0]
+          }
+          return candidateObj
+        })
     })
     Promise.all(pCandidates).then((data) => {
       console.log(`pCandidates: `, data)
       // Save the candidate list to state
-      this.setState({candidates:pCandidates})
+      this.setState({ candidates: pCandidates })
     })
   }
 
   getCandidateBio = (candidateId) => {
     const query = {
       command: "CandidateBio.getBio",
-      params: {candidateId:candidateId}
+      params: { candidateId: candidateId }
     }
     return this.callVoteSmart(query)
   }
 
   getVoter = () => {
-    const query = {name:this.state.voterName}
+    const query = { name: this.username }
     return API.getVoter(query)
   }
 
   loadVoter = () => {
     this.getVoter()
-    .then (voterDB => {
-      console.log(`loadVoter: `, voterDB)
-      if (voterDB.data.length) {
-        this._id = voterDB.data[0]._id;
-        this.setState({
-          line1:voterDB.data[0].address.line1,
-          city:voterDB.data[0].address.city,
-          state:voterDB.data[0].address.state,
-          zip:voterDB.data[0].address.zip
-        })
-      }
-      else {
-        this.setState({
-          line1:"",
-          city:"",
-          state:"",
-          zip:""
-        })
-      }
-    })
+      .then(voterDB => {
+        console.log(`loadVoter: `, voterDB)
+        if (voterDB.data.length) {
+          this._id = voterDB.data[0]._id;
+          this.setState({
+            line1: voterDB.data[0].address.line1,
+            city: voterDB.data[0].address.city,
+            state: voterDB.data[0].address.state,
+            zip: voterDB.data[0].address.zip
+          })
+        }
+        else {
+          this.setState({
+            line1: "",
+            city: "",
+            state: "",
+            zip: ""
+          })
+        }
+      })
   }
 
   saveVoter = event => {
     // Check if voter already saved in db
     this.getVoter()
-      .then (voterDB => {
+      .then(voterDB => {
         if (voterDB.data.length) {
           console.log(`Voter in db`)
           // return voterDB.data;
@@ -173,10 +172,10 @@ class Home extends Component {
             }
           }
           API.saveVoter(voterObj)
-          .then(voterDB => {
-            this._id = voterDB.data._id;
-            console.log(`Save _id: ${this._id}`)
-          })
+            .then(voterDB => {
+              this._id = voterDB.data._id;
+              console.log(`Save _id: ${this._id}`)
+            })
         }
       })
       .catch(err => console.log(err));
@@ -193,7 +192,7 @@ class Home extends Component {
         zip: this.state.zip
       }
     }
-    return API.updateVoter(this._id,voterObj)
+    return API.updateVoter(this._id, voterObj)
   }
 
   handleInputChange = event => {
@@ -207,20 +206,20 @@ class Home extends Component {
     event.preventDefault();
     this.callCivic();
 
-    this.getCandidates(this.state.zip, this.stageId).then (res => {
+    this.getCandidates(this.state.zip, this.stageId).then(res => {
       // console.log(`candidates by zip: `, res)
       // If candidate list != 0, parse response into an object
       if (res.data.candidateList.candidate.length) {
         this.parseCandidates(res.data.candidateList.candidate)
         // Test with getting first candidate bio
         // this.getCandidateBio(this.state.candidates[0].candidateId)
-      }  
+      }
     })
   };
 
   render() {
     return (
-      
+
       <div className="test">
         <Row className="voteSearch">
           <Col size="12">
@@ -242,7 +241,7 @@ class Home extends Component {
                 type="text"
                 className="form-control"
                 placeholder="Voter Name"
-            />
+              />
             </form>
             <Button
               onClick={this.loadVoter}
@@ -265,7 +264,7 @@ class Home extends Component {
             {/* End of Test Stuff */}
           </Col>
         </Row>
-        
+
         <Row className="voteCandidate">
           <Col size="12">
             <Candidate />
@@ -275,7 +274,7 @@ class Home extends Component {
         <Row className="votePodcast">
           <Col size="12">
             <Podcast />
-            
+
             <Button
               onClick={this.testListenNotes}
               style={{ marginBottom: 10 }}

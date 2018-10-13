@@ -1,15 +1,19 @@
 // Imports
-const axios  = require("axios");
+const axios = require("axios");
 const db = require("../models");
 const parseString = require('xml2js').parseString;
 const keysFile = require("../keys.js");
-
+var passport = require('passport');
+var settings = require('../config/settings');
+require('../config/passport')(passport);
+//var express = require('express');
+var jwt = require('jsonwebtoken');
 // Exports
 module.exports = (app) => {
   // Routes
 
   // Vote Smart Route
-  app.get("/voteSmart", function(req,res) {
+  app.get("/voteSmart", function (req, res) {
     // console.log(`voteSmart req.query:`)
     // console.log(req.query)
     let query = `http://api.votesmart.org/${req.query.command}`;
@@ -17,24 +21,24 @@ module.exports = (app) => {
     // console.log(query)
 
     // Convert query.params to an object, combine two objects to create new params object for api query
-    const params = {"key": keysFile.votesmart.key, ...JSON.parse(req.query.params)}
+    const params = { "key": keysFile.votesmart.key, ...JSON.parse(req.query.params) }
     console.log(params);
 
     axios.get(query, {
       params: params
-      }
+    }
     ).then(result => {
-        // console.log(`API result: ${JSON.stringify(result.data)}`)
-        // Convert xml to JSON
-        parseString(result.data, function(err,jsonres) {
-          // console.log(`json: ${JSON.stringify(jsonres)}`)
-          return res.json(jsonres);
+      // console.log(`API result: ${JSON.stringify(result.data)}`)
+      // Convert xml to JSON
+      parseString(result.data, function (err, jsonres) {
+        // console.log(`json: ${JSON.stringify(jsonres)}`)
+        return res.json(jsonres);
       })
     }).catch(err => res.status(422).json(err));
   });
 
   // Google Civic Route
-  app.get("/civic", function(req,res){
+  app.get("/civic", function (req, res) {
     // console.log(req.query.address)
     let query = "https://www.googleapis.com/civicinfo/v2/voterinfo";
 
@@ -51,7 +55,7 @@ module.exports = (app) => {
   })
 
   // Listen Notes Route
-  app.get("/listen", function(req,res){
+  app.get("/listen", function (req, res) {
     let query = "https://listennotes.p.mashape.com/api/v1/search";
 
     axios.get(query, {
@@ -71,20 +75,22 @@ module.exports = (app) => {
       return res.json(result.data);
     }).catch(err => res.status(422).json(err));
   })
-  
+
   // Database Routes
+
   // Find
-  app.get("/voter", function(req,res){
+  app.get("/voter", function (req, res) {
     db.Voter
       .find(req.query)
       .then(dbModel => {
         console.log(`getVoter: ${dbModel}`)
-        res.json(dbModel)})
+        res.json(dbModel)
+      })
       .catch(err => res.status(422).json(err));
   });
 
   // Find voter by id
-  app.get("/voter/:id", function(req, res) {
+  app.get("/voter/:id", function (req, res) {
     db.Voter
       .findById(req.params.id)
       .then(dbModel => res.json(dbModel))
@@ -92,15 +98,15 @@ module.exports = (app) => {
   });
 
   // Find candidate by id
-  app.get("/candidate/:id", function(req, res) {
+  app.get("/candidate/:id", function (req, res) {
     db.Candidate
-    .findById(req.params.id)
-    .then(dbModel => res.json(dbModel))
-    .catch(err => res.status(422).json(err))
+      .findById(req.params.id)
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err))
   })
 
   // Save voter info
-  app.post("/voter", (req,res) => {
+  app.post("/voter", (req, res) => {
     console.log(`save voter`)
     console.log(req.body)
     db.Voter
@@ -110,15 +116,57 @@ module.exports = (app) => {
   })
 
   // Save candidate info
-  app.post("/candidate", (req,res) => {
+  app.post("/candidate", (req, res) => {
     db.Candidate
       .create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err))
   })
+  //Register Voter
+  app.post('/register', function (req, res) {
+    console.log(`req body `, req.body);
+    if (!req.body.username || !req.body.password) {
+      res.json({ success: false, msg: 'Please enter username and password.' });
+    } else {
+      db.Voter
+        .create(req.body)
+        .then(dbModel => res.json(dbModel))
+        .catch(err => {
+          if (err) {
+            return res.json({ success: false, msg: 'Username already exists.' });
+          }
+          res.json({ success: true, msg: 'Successful created new user.' });
+        });
+    }
+  });
+
+  //Login as a voter
+  app.post('/login', function(req, res) {
+    db.Voter.findOne({
+      username: req.body.username
+    }, function(err, user) {
+      if (err) throw err;
+  
+      if (!user) {
+        res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
+      } else {
+        // check if password matches
+        user.comparePassword(req.body.password, function (err, isMatch) {
+          if (isMatch && !err) {
+            // if user is found and password is right create a token
+            var token = jwt.sign(user.toJSON(), settings.secret);
+            // return the information including token as JSON
+            res.json({success: true, token: 'JWT ' + token});
+          } else {
+            res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+          }
+        });
+      }
+    });
+  });
 
   // Delete voter by id
-  app.delete("/voter/:id", function(req,res) {
+  app.delete("/voter/:id", function (req, res) {
     db.Voter
       .findById({ _id: req.params.id })
       .then(dbModel => dbModel.remove())
@@ -127,9 +175,9 @@ module.exports = (app) => {
   })
 
   // Update voter info
-  app.put("/voter/:id", function(req,res) {
+  app.put("/voter/:id", function (req, res) {
     db.Voter
-      .findOneAndUpdate({ _id: req.params.id }, req.body, {upsert:true})
+      .findOneAndUpdate({ _id: req.params.id }, req.body, { upsert: true })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   })
