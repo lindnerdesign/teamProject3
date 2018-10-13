@@ -2,6 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const path = require('path');
+const logger = require('morgan');
+const auth = require('./controllers/auth');
 
 // Initialize Express
 const app = express();
@@ -15,6 +18,10 @@ const PORT = process.env.PORT || 3001;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use('/api/auth', auth);
+
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -24,7 +31,11 @@ if (process.env.NODE_ENV === "production") {
 require("./controllers/controller.js")(app);
 
 // Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/project3");
+mongoose.Promise = require('bluebird');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/project3', { promiseLibrary: require('bluebird') })
+  .then(() =>  console.log('connection succesful'))
+  .catch((err) => console.error(err));
+//mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/project3");
 
 // Start the API server
 app.listen(PORT, function() {
