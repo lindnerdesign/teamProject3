@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import axios from 'axios';
 import './Register.css';
 import API from "../../utils/API";
 
@@ -27,7 +26,6 @@ class Create extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    //const { username, password } = this.state;
     const voter = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
