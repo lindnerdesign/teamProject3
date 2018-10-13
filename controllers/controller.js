@@ -77,7 +77,9 @@ module.exports = (app) => {
   app.get("/voter", function(req,res){
     db.Voter
       .find(req.query)
-      .then(dbModel => res.json(dbModel))
+      .then(dbModel => {
+        console.log(`getVoter: ${dbModel}`)
+        res.json(dbModel)})
       .catch(err => res.status(422).json(err));
   });
 
@@ -127,7 +129,7 @@ module.exports = (app) => {
   // Update voter info
   app.put("/voter/:id", function(req,res) {
     db.Voter
-      .findOneAndUpdate({ _id: req.params.id }, req.body)
+      .findOneAndUpdate({ _id: req.params.id }, req.body, {upsert:true})
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   })

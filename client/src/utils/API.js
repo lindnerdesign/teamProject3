@@ -29,7 +29,7 @@ export default {
       params:query
     });
   },
-  // Find voter info with the given id
+  // Find voter info with the given _id
   getVoterById: function(id) {
     return axios.get(`/voter/${id}`);
   },
@@ -37,7 +37,7 @@ export default {
   getCandidateById: function(id) {
     return axios.get(`/candidate/${id}`);
   },
-  // Deletes voter info with the given id
+  // Deletes voter info with the given _id
   deleteVoter: function(id) {
     return axios.delete(`{/voter/${id}`);
   },
@@ -48,5 +48,9 @@ export default {
   // Save candidate info to database
   saveCandidate: function(candidateData) {
     return axios.post("/candidate", candidateData);
+  },
+  // Update voter info
+  updateVoter: function(id,voterData){
+    return axios.put(`/voter/${id}`, voterData);
   }
 };
