@@ -5,13 +5,13 @@ require('../config/passport')(passport);
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var router = express.Router();
-var User = require("../models/user");
+var User = require("../models/User");
 
 router.post('/register', function(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({success: false, msg: 'Please pass username and password.'});
   } else {
-    var newUser = new User({
+    var newUser= new User({
       username: req.body.username,
       password: req.body.password
     });
