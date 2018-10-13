@@ -256,7 +256,6 @@ class Home extends Component {
             >
               Test Save Voter Info
             </Button>
-<<<<<<< HEAD
             <Button
               onClick={this.updateVoter}
               className={"btn btn-primary"}
@@ -264,13 +263,11 @@ class Home extends Component {
               Test Update Voter Info
             </Button>
             {/* End of Test Stuff */}
-=======
           </Col>
         </Row>
         
         <Row className="voteCandidate">
           <Col size="12">
->>>>>>> front end work
             <Candidate />
           </Col>
         </Row>
