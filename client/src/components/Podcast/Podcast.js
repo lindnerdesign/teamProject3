@@ -16,7 +16,7 @@ const Podcast = () => (
         <p>Description</p>
         <p>
           <Button bsStyle="primary">Play</Button>
-          <Button bsStyle="success podcastBtnSave">Save</Button>
+          <Button bsStyle="success" className="podcastBtnSave">Save</Button>
         </p>
       </Thumbnail>
     </Col>
@@ -26,7 +26,7 @@ const Podcast = () => (
         <p>Description</p>
         <p>
           <Button bsStyle="primary">Play</Button>
-          <Button bsStyle="success podcastBtnSave">Save</Button>
+          <Button bsStyle="success" className="podcastBtnSave">Save</Button>
         </p>
       </Thumbnail>
     </Col>
@@ -36,7 +36,7 @@ const Podcast = () => (
         <p>Description</p>
         <p>
           <Button bsStyle="primary">Play</Button>
-          <Button bsStyle="success podcastBtnSave">Save</Button>
+          <Button bsStyle="success" className="podcastBtnSave">Save</Button>
         </p>
       </Thumbnail>
     </Col>

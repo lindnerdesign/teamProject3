@@ -5,18 +5,24 @@ require('../config/passport')(passport);
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var router = express.Router();
-var User = require("../models/User");
+var Voter = require("../models/voter");
 
 router.post('/register', function(req, res) {
   if (!req.body.username || !req.body.password) {
-    res.json({success: false, msg: 'Please pass username and password.'});
+    res.json({success: false, msg: 'Please enter username and password.'});
   } else {
-    var newUser= new User({
+    var newVoter= new Voter({
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      line1: req.body.line1,
+      city: req.body.city,
+      state: req.body.state,
+      zip: req.body.zip
     });
     // save the user
-    newUser.save(function(err) {
+    newVoter.save(function(err) {
       if (err) {
         return res.json({success: false, msg: 'Username already exists.'});
       }
@@ -26,7 +32,7 @@ router.post('/register', function(req, res) {
 });
 
 router.post('/login', function(req, res) {
-  User.findOne({
+  Voter.findOne({
     username: req.body.username
   }, function(err, user) {
     if (err) throw err;

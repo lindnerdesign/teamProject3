@@ -52,5 +52,16 @@ export default {
   // Update voter info
   updateVoter: function(id,voterData){
     return axios.put(`/voter/${id}`, voterData);
-  }
+  },
+//register voter
+registerVoter: function(voterData){
+  console.log(`register `, voterData);
+  return axios.post("/register", voterData);
+},
+//login voter
+loginVoter: function(loginData){
+  console.log(`login `, loginData);
+  return axios.post("/login", loginData);
+}
+
 };
