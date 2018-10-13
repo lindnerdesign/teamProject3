@@ -12,35 +12,42 @@ import '../pages/Home.css';
 class Home extends Component {
   stageId = "G";
   _id = "0";
-   username ="";
+  username ="";
 
   state = {
+    username: "",
     firstName: "",
     lastName: "",
-    username: "",
+
     line1: "",
     city: "",
     state: "",
     zip: "",
+
     candidates: []
   }
 
   componentDidMount() {
-
     this.loadVoter();
   }
-  componentDidUpdate() {
-    this.username = this.props.match.params;
-    console.log(this.username);
-  }
 
-  callVoteSmart = (query) => {
-    return API.apiVoteSmart(query)
-  };
+  componentDidUpdate() {
+    this.username = window.sessionStorage.getItem("username");
+    if (this.username && !this.state.username) {
+      console.log(`un:`, this.username)
+      this.setState({username:this.username})
+      this.loadVoter();
+    }
+  }
 
   logout = () => {
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem("username");
     window.location.reload();
+  };
+
+  callVoteSmart = (query) => {
+    return API.apiVoteSmart(query)
   };
 
   callCivic = () => {
@@ -124,7 +131,8 @@ class Home extends Component {
   }
 
   getVoter = () => {
-    const query = { name: this.username }
+    const query = { username: this.username }
+    console.log(`getVoter query`, query)
     return API.getVoter(query)
   }
 
@@ -211,8 +219,6 @@ class Home extends Component {
       // If candidate list != 0, parse response into an object
       if (res.data.candidateList.candidate.length) {
         this.parseCandidates(res.data.candidateList.candidate)
-        // Test with getting first candidate bio
-        // this.getCandidateBio(this.state.candidates[0].candidateId)
       }
     })
   };
@@ -232,7 +238,7 @@ class Home extends Component {
               handleInputChange={this.handleInputChange}
             ></SearchForm>
             {/* Test Form & Buttons */}
-            <form>
+            {/* <form>
               <label htmlFor="fulladdress">Voter Name</label>
               <input
                 value={this.state.voterName}
@@ -248,13 +254,13 @@ class Home extends Component {
               className={"btn btn-primary"}
             >
               Test Load Voter Info
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               onClick={this.saveVoter}
               className={"btn btn-primary"}
             >
               Test Save Voter Info
-            </Button>
+            </Button> */}
             <Button
               onClick={this.updateVoter}
               className={"btn btn-primary"}

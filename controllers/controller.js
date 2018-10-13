@@ -6,19 +6,15 @@ const keysFile = require("../keys.js");
 var passport = require('passport');
 var settings = require('../config/settings');
 require('../config/passport')(passport);
-//var express = require('express');
 var jwt = require('jsonwebtoken');
+
 // Exports
 module.exports = (app) => {
   // Routes
 
   // Vote Smart Route
   app.get("/voteSmart", function (req, res) {
-    // console.log(`voteSmart req.query:`)
-    // console.log(req.query)
     let query = `http://api.votesmart.org/${req.query.command}`;
-    // console.log(`query`)
-    // console.log(query)
 
     // Convert query.params to an object, combine two objects to create new params object for api query
     const params = { "key": keysFile.votesmart.key, ...JSON.parse(req.query.params) }
@@ -28,7 +24,6 @@ module.exports = (app) => {
       params: params
     }
     ).then(result => {
-      // console.log(`API result: ${JSON.stringify(result.data)}`)
       // Convert xml to JSON
       parseString(result.data, function (err, jsonres) {
         // console.log(`json: ${JSON.stringify(jsonres)}`)
@@ -97,32 +92,15 @@ module.exports = (app) => {
       .catch(err => res.status(422).json(err));
   });
 
-  // Find candidate by id
-  app.get("/candidate/:id", function (req, res) {
-    db.Candidate
-      .findById(req.params.id)
-      .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err))
-  })
-
   // Save voter info
   app.post("/voter", (req, res) => {
-    console.log(`save voter`)
-    console.log(req.body)
     db.Voter
       .create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   })
 
-  // Save candidate info
-  app.post("/candidate", (req, res) => {
-    db.Candidate
-      .create(req.body)
-      .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err))
-  })
-  //Register Voter
+  //Register Voter - Saves voter to db
   app.post('/register', function (req, res) {
     console.log(`req body `, req.body);
     if (!req.body.username || !req.body.password) {

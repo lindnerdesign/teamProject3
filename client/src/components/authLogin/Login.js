@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Login.css';
 import API from "../../utils/API";
@@ -23,28 +22,17 @@ class Login extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-
-    // axios.post('/api/auth/login', { username, password })
-    //   .then((result) => {
-    //     localStorage.setItem('jwtToken', result.data.token);
-    //     this.setState({ message: '' });
-    //     this.props.history.push('/')
-    //   })
-    //   .catch((error) => {
-    //     if(error.response.status === 401) {
-    //       this.setState({ message: 'Login failed. Username or password do not match' });
-    //     }
-    //   });
-
       const login={
         username: this.state.username,
         password: this.state.password
       }
       API.loginVoter(login)
       .then((result) => {
-        localStorage.setItem('jwtToken', result.data.token);
+        sessionStorage.setItem('jwtToken', result.data.token);
         this.setState({ message: 'Login Successful' });
-        this.props.history.push('/'+this.state.username)
+        this.setState({login:true})
+        sessionStorage.setItem('username', this.state.username);
+        this.props.history.push('/')
       })
       .catch((error) => {
         if(error.response.status === 401) {

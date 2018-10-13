@@ -12,7 +12,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      username: ''
+      login: false
     }
   };
   handleInputChange = event => {
@@ -25,7 +25,7 @@ class App extends Component {
     return (
       <Router>
       <div>
-        <NavBar />
+        <NavBar login={this.state.login} />
         <Hero />
         <Wrapper>
           <Route exact path="/" component={Home} />
