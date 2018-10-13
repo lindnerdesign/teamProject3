@@ -7,6 +7,8 @@ import Button from "../components/Button";
 import Row from "../components/Row";
 import Col from "../components/Col";
 import { get } from "https";
+import '../pages/Home.css';
+
 
 class Home extends Component {
   stageId = "G";
@@ -220,8 +222,8 @@ class Home extends Component {
     return (
       
       <div className="test">
-        <Row>
-          <Col size="md-12">
+        <Row className="voteSearch">
+          <Col size="12">
             <SearchForm
               line1={this.state.line1}
               city={this.state.city}
@@ -254,6 +256,7 @@ class Home extends Component {
             >
               Test Save Voter Info
             </Button>
+<<<<<<< HEAD
             <Button
               onClick={this.updateVoter}
               className={"btn btn-primary"}
@@ -261,17 +264,30 @@ class Home extends Component {
               Test Update Voter Info
             </Button>
             {/* End of Test Stuff */}
-            <Candidate />
-            <Podcast />
+=======
           </Col>
         </Row>
-        <Button
-          onClick={this.testListenNotes}
-          style={{ float: "center", marginBottom: 10 }}
-          className={"btn btn-success"}
-        >
-          Test Listen Notes
-        </Button>
+        
+        <Row className="voteCandidate">
+          <Col size="12">
+>>>>>>> front end work
+            <Candidate />
+          </Col>
+        </Row>
+
+        <Row className="votePodcast">
+          <Col size="12">
+            <Podcast />
+            
+            <Button
+              onClick={this.testListenNotes}
+              style={{ marginBottom: 10 }}
+              className={"btn btn-success"}
+            >
+              Test Listen Notes
+            </Button>
+          </Col>
+        </Row>
       </div>
     );
   }
