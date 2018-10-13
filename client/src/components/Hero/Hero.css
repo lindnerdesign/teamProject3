@@ -1,7 +1,5 @@
 .jumbotron {
     height: 300px;
-}
-
-.text {
-    padding-top: 50px;
+    background-image: url("herobackground.jpg");
+    margin-bottom: 0;
 }
