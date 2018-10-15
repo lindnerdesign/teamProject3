@@ -285,6 +285,8 @@ class Home extends Component {
                 <option value={6}>U.S. Senator</option>
                 <option value={5}>U.S. Representative</option>
                 <option value={3}>Governor</option>
+                <option value={4}>Lt. Governor</option>
+                <option value={8}>State House</option>
                 <option value={12}>Attorney General</option>
                 <option value={44}>Secretary of State</option>
               </select>

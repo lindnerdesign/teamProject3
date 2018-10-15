@@ -10,7 +10,7 @@ const Candidate = props => (
   <Row>
     <Col xs={12} sm={6} md={4}>
       {props.candidates.map (candidate => (
-        <Thumbnail key={candidate.candidateId} src={candidate.photo} alt="242x200">
+        <Thumbnail key={candidate.candidateId} src={candidate.photo ? candidate.photo : "https://upload.wikimedia.org/wikipedia/en/b/b1/Portrait_placeholder.png"} alt="242x200">
         <h3>{candidate.ballotName}</h3>
         <p>{candidate.electionOffice}</p>
         <p>{candidate.electionDistrictName}</p>
