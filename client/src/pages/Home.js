@@ -28,7 +28,11 @@ class Home extends Component {
     pstate:"",
     pzip:"",
 
-    candidates: []
+    candidates: [],
+   
+    podcasts: [],
+   
+
   }
 
   componentDidMount() {
@@ -69,11 +73,16 @@ class Home extends Component {
     .catch(err => console.log(err));
   };
 
+
+
   testListenNotes = event => {
     API.apiListenNotes()
+   
     .then(result => {
       console.log(`Listen Notes result: `, result)
+      this.setState({podcasts:result.data.results})
     })
+    .catch(err => console.log(err));
   };
 
   getCandidates = (zip, stageId) => {
@@ -274,8 +283,16 @@ class Home extends Component {
 
         <Row className="votePodcast">
           <Col size="12">
-            <Podcast />
-            
+            <Podcast 
+              podcasts={this.state.podcasts}
+              // thumbnail={this.state.thumbnail}
+              // title={this.state.title}
+              // description={this.state.description}
+              // length={this.state.length}
+              // audio={this.state.audio}
+              >
+            </Podcast>
+          
             <Button
               onClick={this.testListenNotes}
               style={{ marginBottom: 10 }}

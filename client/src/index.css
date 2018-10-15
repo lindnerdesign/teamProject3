@@ -4,3 +4,11 @@ body {
   font-family: sans-serif;
   margin-bottom: 0px;
 }
+
+h1, h2, h3 {
+  font-family: 'Roboto Slab', serif;
+}
+
+p, form, .navbar {
+  font-family: 'Lato', sans-serif;
+}

@@ -5,11 +5,10 @@ import Home from "./pages/Home";
 // import Search from "./pages/Search";
 import NavBar from "./components/NavBar";
 import Hero from "./components/Hero";
-import Footer from "./components/Footer";
+import FooterPage from "./components/FooterPage";
 import Wrapper from "./components/Wrapper";
 import Login from "./components/authLogin";
 import Register from "./components/authRegister";
-
 
 const App = () => (
   <Router>
@@ -24,7 +23,7 @@ const App = () => (
         <Route path='/login' component={Login} />
         <Route path='/register' component={Register} />
       </Wrapper>
-      <Footer />
+      <FooterPage />
     </div>
   </Router>
 );
