@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import './Register.css';
-import { Context, Error, Rules, Form, Input } from 'react-form-validation';
+import API from "../../utils/API";
+
 
 class Create extends Component {
 
   constructor() {
     super();
     this.state = {
-      context: new Context({
-				fields: {
-					username: Rules.required().email(),
-					password: Rules.required()
-				}
-			})
+
+      username: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+      line1: '',
+      city: '',
+      state: '',
+      zip: ''
+
     };
   }
 
@@ -26,28 +30,89 @@ class Create extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    const { username, password } = this.state;
+    const voter = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      address: {
+        line1: this.state.line1,
+        city: this.state.city,
+        state: this.state.state,
+        zip: this.state.zip
+      },
+      username: this.state.username,
+      password: this.state.password
 
-    axios.post('/api/auth/register', { username, password })
+    }
+    API.registerVoter(voter)
       .then((result) => {
         this.props.history.push("/login")
       });
-  }
-
+  };
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  };
   render() {
     const { username, password } = this.state;
     return (
-      <div class="container">
-        <form class="form-signin" onSubmit={this.onSubmit}>
-          <h2 class="form-signin-heading">Register</h2>
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" class="form-control" placeholder="Email address" name="username" value={username} onChange={this.onChange} required/>
 
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" class="form-control" placeholder="Password" name="password" value={password} onChange={this.onChange} required/>
-          
+      <div className="container">
+        <form className="form-signin" onSubmit={this.onSubmit}>
+          <h2 className="form-signin-heading">Register</h2>
+          <input type="email" className="form-control" placeholder="Email address" name="username" value={username} onChange={this.handleInputChange} required />
+          <input
+            value={this.state.firstName}
+            onChange={this.handleInputChange}
+            name="firstName"
+            type="text"
+            className="form-control"
+            placeholder="First Name"
+          />
+          <input
+            value={this.state.lastName}
+            onChange={this.handleInputChange}
+            name="lastName"
+            type="text"
+            className="form-control"
+            placeholder="Last Name"
+          />
+          <input
+            value={this.state.line1}
+            onChange={this.handleInputChange}
+            name="line1"
+            type="text"
+            className="form-control"
+            placeholder="Street Address"
+          />
+          <input
+            value={this.state.city}
+            onChange={this.handleInputChange}
+            name="city"
+            type="text"
+            className="form-control"
+            placeholder="City"
+          />
 
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+          <input
+            value={this.state.state}
+            onChange={this.handleInputChange}
+            name="state"
+            type="text"
+            className="form-control"
+            placeholder="State"
+          />
+          <input
+            value={this.state.zip}
+            onChange={this.handleInputChange}
+            name="zip"
+            type="text"
+            className="form-control"
+            placeholder="ZIP Code"
+          />
+          <input type="password" className="form-control" placeholder="Password" name="password" value={password} onChange={this.handleInputChange} required />
+          <button className="btn btn-lg btn-primary btn-block" type="submit">Register</button>
         </form>
       </div>
     );

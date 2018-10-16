@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Login.css';
+import API from "../../utils/API";
 
 class Login extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       username: '',
       password: '',
@@ -22,39 +22,50 @@ class Login extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    const { username, password } = this.state;
-
-    axios.post('/api/auth/login', { username, password })
+      const login={
+        username: this.state.username,
+        password: this.state.password
+      }
+      API.loginVoter(login)
       .then((result) => {
-        localStorage.setItem('jwtToken', result.data.token);
-        this.setState({ message: '' });
+        sessionStorage.setItem('jwtToken', result.data.token);
+        this.setState({ message: 'Login Successful' });
+        this.setState({login:true})
+        sessionStorage.setItem('username', this.state.username);
         this.props.history.push('/')
       })
       .catch((error) => {
         if(error.response.status === 401) {
-          this.setState({ message: 'Login failed. Username or password not match' });
+          this.setState({ message: 'Login failed. Username or password do not match' });
         }
       });
-  }
+  };
+
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  };
 
   render() {
-    const { username, password, message } = this.state;
+    //const { username, password, message } = this.state;
     return (
-      <div class="container">
-        <form class="form-signin" onSubmit={this.onSubmit}>
-          {message !== '' &&
-            <div class="alert alert-warning alert-dismissible" role="alert">
-              { message }
+      <div className="container">
+        <form className="form-signin" onSubmit={this.onSubmit}>
+          {this.state.message !== '' &&
+            <div className="alert alert-warning alert-dismissible" role="alert">
+              { this.state.message }
             </div>
           }
-          <h2 class="form-signin-heading">Please sign in</h2>
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" class="form-control" placeholder="Email address" name="username" value={username} onChange={this.onChange} required/>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" class="form-control" placeholder="Password" name="password" value={password} onChange={this.onChange} required/>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+          <h2 className="form-signin-heading">Please sign in</h2>
+          <label name="inputEmail" className="sr-only">Email address</label>
+          <input type="email" className="form-control" placeholder="Email address" name="username" value={this.state.username} onChange={this.handleInputChange} required/>
+          <label name="inputPassword" className="sr-only">Password</label>
+          <input type="password" className="form-control" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange} required/>
+          <button className="btn btn-lg btn-primary btn-block" type="submit">Login</button>
           <p>
-            Not a member? <Link to="/register"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
+            Not a member? <Link to="/register"><span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
           </p>
         </form>
       </div>

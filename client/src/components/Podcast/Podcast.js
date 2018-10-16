@@ -24,9 +24,6 @@ const Podcast = props => (
         
       </Col>
     ))}
-
-    
-  
   </Row>
 </Grid>
 </div>
