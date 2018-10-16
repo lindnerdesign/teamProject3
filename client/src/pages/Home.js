@@ -3,15 +3,15 @@ import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 import Candidate from "../components/Candidate";
 import Podcast from "../components/Podcast";
-import Button from "../components/Button";
-import Row from "../components/Row";
-import Col from "../components/Col";
-import '../pages/Home.css';
+import {Row, Col, Button} from "react-bootstrap";
+import './Home.css';
 
 class Home extends Component {
-  stageId = "G";
+  stageId = "G"; // Set to General Election
   _id = "0";
-  username ="";
+  username = "";
+  candidates = [];
+  uniqueDistricts;
 
   state = {
     username: "",
@@ -23,8 +23,11 @@ class Home extends Component {
     state: "",
     zip: "",
 
-    candidates: [],
     podcasts: [],
+    candidates: [], // Might not need this in state
+    contests: [], // from google civic
+    contest: [],
+    officeId: "6" // Default to Senator
   }
 
   componentDidMount() {
@@ -34,15 +37,15 @@ class Home extends Component {
   componentDidUpdate() {
     this.username = window.sessionStorage.getItem("username");
     if (this.username && !this.state.username) {
-      console.log(`un:`, this.username)
+      console.log(`username:`, this.username)
       this.setState({username:this.username})
       this.loadVoter();
     }
   }
 
   logout = () => {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem("username");
+    sessionStorage.removeItem('jwtToken');
+    sessionStorage.removeItem("username");
     window.location.reload();
   };
 
@@ -64,9 +67,11 @@ class Home extends Component {
             pline1: res.data.pollingLocations[0].address.line1,
             pcity: res.data.pollingLocations[0].address.city,
             pstate: res.data.pollingLocations[0].address.state,
-            pzip: res.data.pollingLocations[0].address.zip
+            pzip: res.data.pollingLocations[0].address.zip,
+            contests: res.data.contests
           })
           console.log(` Your polling place: `, res.data.pollingLocations[0].address)
+          console.log(`Your contests`, res.data.contests)
         }
         else {
           console.log("Polling location not available")
@@ -104,6 +109,7 @@ class Home extends Component {
             electionDistrictName: candidate.electionDistrictName[0],
             electionOffice: candidate.electionOffice[0],
             electionOfficeId: candidate.electionOfficeId[0],
+            electionStateId: candidate.electionStateId[0],
             electionDate: candidate.electionDate[0],
             runningMateId: candidate.runningMateId[0],
             runningMateName: candidate.runningMateName[0],
@@ -112,15 +118,17 @@ class Home extends Component {
             family: res.data.bio.candidate[0].family[0],
             homeCity: res.data.bio.candidate[0].homeCity[0],
             homeState: res.data.bio.candidate[0].homeState[0],
-            religion: res.data.bio.candidate[0].religion[0]
+            religion: res.data.bio.candidate[0].religion[0],
+            photo: res.data.bio.candidate[0].photo[0]
           }
           return candidateObj
         })
     })
-    Promise.all(pCandidates).then((data) => {
+    return Promise.all(pCandidates).then(data => {
       console.log(`pCandidates: `, data)
       // Save the candidate list to state
-      this.setState({ candidates: pCandidates })
+      // this.setState({ candidates: data })
+      this.candidates = data;
     })
   }
 
@@ -145,6 +153,8 @@ class Home extends Component {
         if (voterDB.data.length) {
           this._id = voterDB.data[0]._id;
           this.setState({
+            firstName: voterDB.data[0].firstName,
+            lastName: voterDB.data[0].lastName,
             line1: voterDB.data[0].address.line1,
             city: voterDB.data[0].address.city,
             state: voterDB.data[0].address.state,
@@ -205,6 +215,51 @@ class Home extends Component {
     return API.updateVoter(this._id, voterObj)
   }
 
+  filterByContest = (contest) => {
+    return ( contest.office.indexOf( this.state.contest ) > -1 )
+  }
+
+  filterByOfficeId = (contest) => {
+    return (contest.electionOfficeId === this.state.officeId)
+  }
+
+  arrayUnique = function (arr) {
+    return arr.filter(function(item, index){
+      return arr.indexOf(item) >= index;
+    });
+  };
+
+  getDistrictIds = (contest) => {
+    // Get a list of individual elections by district
+    const districts = contest.map(district => {
+      return (district.electionDistrictId)
+    })
+    // Remove duplicates from array
+    this.uniqueDistricts = this.arrayUnique(districts);
+    console.log(`uniqueDistricts: `, this.uniqueDistricts);
+  }
+
+  // Test Button - Need to link to Navbar dropdown menu
+  candidateByOffice = (event) => {
+    // console.log(`this.candidates: `, this.candidates)
+    const arr = this.candidates.filter(this.filterByOfficeId)
+    console.log(`arr: `, arr)
+    this.setState({contest:arr});
+    this.getDistrictIds(arr);
+  }
+
+  // Google API candidate list - Do we want to harvest any info from here?
+  testCandidate = (event) => {
+    // test get candidate info
+    const contestArr = this.state.contests.filter(this.filterByContest)
+    console.log(`contestArr: `, contestArr)
+  }
+
+  testStyle = {
+    width: "80%",
+    margin:"auto"
+  }
+  
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -239,66 +294,79 @@ class Home extends Component {
               handleFormSubmit={this.handleFormSubmit}
               handleInputChange={this.handleInputChange}
             ></SearchForm>
-            {/* Test Form & Buttons */}
-            {/* <form>
-              <label htmlFor="fulladdress">Voter Name</label>
-              <input
-                value={this.state.voterName}
+          </Col>
+        </Row>
+        {/* Test Form & Buttons */}
+        <Row className="voteSearch">
+          <Col>
+            <form style={this.testStyle}>
+              <label htmlFor="testForm">Select Contest</label>
+              <select 
+                value={this.state.officeId}
                 onChange={this.handleInputChange}
-                name="voterName"
-                type="text"
-                className="form-control"
-                placeholder="Voter Name"
-              />
+                name="officeId"
+                className="form-control" id="testForm"
+              >
+                <option value={6}>U.S. Senator</option>
+                <option value={5}>U.S. Representative</option>
+                <option value={3}>Governor</option>
+                <option value={4}>Lt. Governor</option>
+                <option value={8}>State House</option>
+                <option value={12}>Attorney General</option>
+                <option value={44}>Secretary of State</option>
+              </select>
             </form>
-            <Button
-              onClick={this.loadVoter}
-              className={"btn btn-primary"}
-            >
-              Test Load Voter Info
-            </Button> */}
-            {/* <Button
-              onClick={this.saveVoter}
-              className={"btn btn-primary"}
-            >
-              Test Save Voter Info
-            </Button> */}
-            <Button
-              onClick={this.updateVoter}
-              className={"btn btn-primary"}
-            >
-              Test Update Voter Info
-            </Button>
+            <div style={this.testStyle}>
+              <Button
+                onClick={this.testCandidate}
+                bsStyle={"primary"}
+              >
+                Get Google Civic Candidates
+              </Button>
+              <Button
+                onClick={this.candidateByOffice}
+                bsStyle={"primary"}
+              >
+                Candidates By Office
+              </Button>
+
+              <Button
+                onClick={this.updateVoter}
+                bsStyle={"primary"}
+              >
+                Test Update Voter Info
+              </Button>
+            </div>
             {/* End of Test Stuff */}
           </Col>
         </Row>
 
-        <Row className="voteCandidate">
+        <Row>
           <Col size="12">
-            <Candidate />
+            {/* Render only if there are candidates */}
+            { this.state.contest.length > 0 &&
+              <Candidate 
+                candidates={this.state.contest} 
+                districts={this.uniqueDistricts} 
+                name={this.state.contest[0].electionOffice}
+              />
+            }
           </Col>
         </Row>
 
         <Row className="votePodcast">
           <Col size="12">
 
-            <Podcast 
-              podcasts={this.state.podcasts}
-              // thumbnail={this.state.thumbnail}
-              // title={this.state.title}
-              // description={this.state.description}
-              // length={this.state.length}
-              // audio={this.state.audio}
-              >
-            </Podcast>
-          
+            <Podcast podcasts={this.state.podcasts} />
+            <div>
             <Button
               onClick={this.testListenNotes}
-              style={{ marginBottom: 10 }}
-              className={"btn btn-success"}
+              bsStyle={"success"}
             >
               Test Listen Notes
             </Button>
+            </div>
+            {/* End Test Button */}
           </Col>
         </Row>
       </div>
