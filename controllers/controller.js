@@ -160,4 +160,12 @@ module.exports = (app) => {
       .catch(err => res.status(422).json(err));
   })
 
+  // Save podcast
+  app.post("/podcast", (req, res) => {
+    db.Podcast
+      .create(req.body)
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  })
+
 } // End of Module Export

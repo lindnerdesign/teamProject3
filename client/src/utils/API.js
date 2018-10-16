@@ -33,35 +33,30 @@ export default {
   getVoterById: function(id) {
     return axios.get(`/voter/${id}`);
   },
-  // Find candidate
-  getCandidateById: function(id) {
-    return axios.get(`/candidate/${id}`);
-  },
-  // Deletes voter info with the given _id
+  // Deletes voter info with the given _id - Remove?
   deleteVoter: function(id) {
     return axios.delete(`{/voter/${id}`);
   },
-  // Saves an article to the database
+  // Saves a voter to the database - Remove?
   saveVoter: function(voterData) {
     return axios.post("/voter", voterData);
-  },
-  // Save candidate info to database
-  saveCandidate: function(candidateData) {
-    return axios.post("/candidate", candidateData);
   },
   // Update voter info
   updateVoter: function(id,voterData){
     return axios.put(`/voter/${id}`, voterData);
   },
-//register voter
-registerVoter: function(voterData){
-  console.log(`register `, voterData);
-  return axios.post("/register", voterData);
-},
-//login voter
-loginVoter: function(loginData){
-  console.log(`login `, loginData);
-  return axios.post("/login", loginData);
-}
-
+  // Register voter
+  registerVoter: function(voterData){
+    console.log(`register `, voterData);
+    return axios.post("/register", voterData);
+  },
+  // Login voter
+  loginVoter: function(loginData){
+    console.log(`login `, loginData);
+    return axios.post("/login", loginData);
+  },
+  // Save podcast
+  savePodcast: function(podcastData){
+    return axios.post("/podcast", podcastData)
+  }
 };

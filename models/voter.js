@@ -15,12 +15,15 @@ const voterSchema = new Schema({
     type: String,
     unique: true,
     required: true
-},
-password: {
+  },
+  password: {
     type: String,
     required: true
-}
-  // date: { type: Date, default: Date.now }
+  },
+  podcasts: [{
+    type: Schema.Types.ObjectId,
+    ref: "Podcast"
+  }]
 });
 
 voterSchema.pre('save', function (next) {
