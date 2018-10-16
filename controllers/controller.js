@@ -111,7 +111,9 @@ module.exports = (app) => {
         .then(dbModel => res.json(dbModel))
         .catch(err => {
           if (err) {
-            return res.json({ success: false, msg: 'Username already exists.' });
+            //res.status(400);
+            return res.json({ success: false, msg: 'Email already exists. Please sign in or use another email.' });
+            
           }
           res.json({ success: true, msg: 'Successful created new user.' });
         });
