@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import './Register.css';
 import API from "../../utils/API";
 
+
 class Create extends Component {
 
   constructor() {
     super();
     this.state = {
+
       username: '',
       password: '',
       firstName: '',
@@ -15,8 +17,10 @@ class Create extends Component {
       city: '',
       state: '',
       zip: ''
+
     };
   }
+
   onChange = (e) => {
     const state = this.state
     state[e.target.name] = e.target.value;
@@ -53,6 +57,7 @@ class Create extends Component {
   render() {
     const { username, password } = this.state;
     return (
+
       <div className="container">
         <form className="form-signin" onSubmit={this.onSubmit}>
           <h2 className="form-signin-heading">Register</h2>

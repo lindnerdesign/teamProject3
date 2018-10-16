@@ -1,0 +1,20 @@
+.footer-copyright {
+  background-color: #262626;
+  padding: 20px 0 20px 0;
+  color:whitesmoke
+}
+
+.footercontent {
+  background-color: whitesmoke;
+  padding: 20px 5% 20px 5%;
+}
+
+.footer-copyright a:link {
+  color: white;
+}
+
+.footerlogo {
+ height: 200px;
+ float: right;
+ padding-top: 25px;
+}

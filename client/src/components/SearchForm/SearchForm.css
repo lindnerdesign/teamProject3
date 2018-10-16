@@ -1,7 +1,9 @@
-form.search {
+.search {
   margin: auto;
-  width: 80%;
+  width: 90%;
   align-content: center;
+  margin-left: 5%;
+  float: left;
 }
 
 .form-control {
@@ -16,4 +18,10 @@ form.search {
 .addressheader {
   margin-top: 50px;
   margin-bottom: 40px;
+}
+
+.pollingimg {
+  align-content: center;
+  padding-top: 55%;
+  margin:auto;
 }

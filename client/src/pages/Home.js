@@ -8,7 +8,6 @@ import Row from "../components/Row";
 import Col from "../components/Col";
 import '../pages/Home.css';
 
-
 class Home extends Component {
   stageId = "G";
   _id = "0";
@@ -24,7 +23,8 @@ class Home extends Component {
     state: "",
     zip: "",
 
-    candidates: []
+    candidates: [],
+    podcasts: [],
   }
 
   componentDidMount() {
@@ -77,9 +77,11 @@ class Home extends Component {
 
   testListenNotes = event => {
     API.apiListenNotes()
-      .then(result => {
-        console.log(`Listen Notes result: `, result)
-      })
+    .then(result => {
+      console.log(`Listen Notes result: `, result)
+      this.setState({podcasts:result.data.results})
+    })
+    .catch(err => console.log(err));
   };
 
   getCandidates = (zip, stageId) => {
@@ -279,8 +281,17 @@ class Home extends Component {
 
         <Row className="votePodcast">
           <Col size="12">
-            <Podcast />
 
+            <Podcast 
+              podcasts={this.state.podcasts}
+              // thumbnail={this.state.thumbnail}
+              // title={this.state.title}
+              // description={this.state.description}
+              // length={this.state.length}
+              // audio={this.state.audio}
+              >
+            </Podcast>
+          
             <Button
               onClick={this.testListenNotes}
               style={{ marginBottom: 10 }}

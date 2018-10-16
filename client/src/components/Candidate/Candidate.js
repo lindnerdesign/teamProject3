@@ -13,27 +13,21 @@ const Candidate = () => (
       <Thumbnail src="../placeholder-candidate.png" alt="242x200">
         <h3>Candidate Name</h3>
         <p>Bio</p>
-        <p>
-          <Button bsStyle="success">Save</Button>
-        </p>
+        
       </Thumbnail>
     </Col>
     <Col xs={12} sm={6} md={4}>
       <Thumbnail src="../placeholder-candidate.png" alt="242x200">
         <h3>Candidate Name</h3>
         <p>Bio</p>
-        <p>
-          <Button bsStyle="success">Save</Button>
-        </p>
+      
       </Thumbnail>
     </Col>
     <Col xs={12} sm={6} md={4}>
       <Thumbnail src="../placeholder-candidate.png" alt="242x200">
         <h3>Candidate Name</h3>
         <p>Bio</p>
-        <p>
-          <Button bsStyle="success">Save</Button>
-        </p>
+       
       </Thumbnail>
     </Col>
   </Row>
