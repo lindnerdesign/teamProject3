@@ -6,10 +6,10 @@ import Podcast from "../components/Podcast";
 import Button from "../components/Button";
 import Row from "../components/Row";
 import Col from "../components/Col";
-import '../pages/Home.css';
+import './Home.css';
 
 class Home extends Component {
-  stageId = "G";
+  stageId = "G"; // Set to General Election
   _id = "0";
   username ="";
 
@@ -34,15 +34,15 @@ class Home extends Component {
   componentDidUpdate() {
     this.username = window.sessionStorage.getItem("username");
     if (this.username && !this.state.username) {
-      console.log(`un:`, this.username)
+      console.log(`username:`, this.username)
       this.setState({username:this.username})
       this.loadVoter();
     }
   }
 
   logout = () => {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem("username");
+    sessionStorage.removeItem('jwtToken');
+    sessionStorage.removeItem("username");
     window.location.reload();
   };
 
@@ -112,7 +112,8 @@ class Home extends Component {
             family: res.data.bio.candidate[0].family[0],
             homeCity: res.data.bio.candidate[0].homeCity[0],
             homeState: res.data.bio.candidate[0].homeState[0],
-            religion: res.data.bio.candidate[0].religion[0]
+            religion: res.data.bio.candidate[0].religion[0],
+            photo: res.data.bio.candidate[0].photo[0]
           }
           return candidateObj
         })
@@ -120,7 +121,7 @@ class Home extends Component {
     Promise.all(pCandidates).then((data) => {
       console.log(`pCandidates: `, data)
       // Save the candidate list to state
-      this.setState({ candidates: pCandidates })
+      this.setState({ candidates: data })
     })
   }
 
@@ -145,6 +146,8 @@ class Home extends Component {
         if (voterDB.data.length) {
           this._id = voterDB.data[0]._id;
           this.setState({
+            firstName: voterDB.data[0].firstName,
+            lastName: voterDB.data[0].lastName,
             line1: voterDB.data[0].address.line1,
             city: voterDB.data[0].address.city,
             state: voterDB.data[0].address.state,
@@ -240,29 +243,6 @@ class Home extends Component {
               handleInputChange={this.handleInputChange}
             ></SearchForm>
             {/* Test Form & Buttons */}
-            {/* <form>
-              <label htmlFor="fulladdress">Voter Name</label>
-              <input
-                value={this.state.voterName}
-                onChange={this.handleInputChange}
-                name="voterName"
-                type="text"
-                className="form-control"
-                placeholder="Voter Name"
-              />
-            </form>
-            <Button
-              onClick={this.loadVoter}
-              className={"btn btn-primary"}
-            >
-              Test Load Voter Info
-            </Button> */}
-            {/* <Button
-              onClick={this.saveVoter}
-              className={"btn btn-primary"}
-            >
-              Test Save Voter Info
-            </Button> */}
             <Button
               onClick={this.updateVoter}
               className={"btn btn-primary"}
@@ -273,9 +253,12 @@ class Home extends Component {
           </Col>
         </Row>
 
-        <Row className="voteCandidate">
+        <Row>
           <Col size="12">
-            <Candidate />
+            {/* Render only if there are candidates */}
+            { this.state.candidates.length > 0 &&
+              <Candidate candidates={this.state.candidates}/>
+            }
           </Col>
         </Row>
 
