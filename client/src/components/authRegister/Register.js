@@ -17,8 +17,8 @@ class Create extends Component {
       line1: '',
       city: '',
       state: '',
-      zip: ''
-
+      zip: '',
+      message: ''
     };
   }
 
@@ -46,7 +46,14 @@ class Create extends Component {
     }
     API.registerVoter(voter)
       .then((result) => {
-        this.props.history.push("/login")
+        console.log(result);
+        if(result.data.success===false){
+          this.setState({ message: result.data.msg });
+        }else{
+          this.setState({ message: 'Registration Successful. Please Login now' });
+          this.props.history.push("/login")
+
+        }
       });
   };
   handleInputChange = event => {
@@ -64,6 +71,11 @@ class Create extends Component {
       <NavBar />
       </Row>
         <form className="form-signin" onSubmit={this.onSubmit}>
+        {this.state.message !== '' &&
+            <div className="alert alert-warning alert-dismissible" role="alert">
+              { this.state.message }
+            </div>
+          }
           <h2 className="form-signin-heading">Register</h2>
           <input type="email" className="form-control" placeholder="Email address" name="username" value={username} onChange={this.handleInputChange} required />
           <input
