@@ -3,9 +3,10 @@ import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 import Candidate from "../components/Candidate";
 import Podcast from "../components/Podcast";
-import Button from "../components/Button";
-import Row from "../components/Row";
-import Col from "../components/Col";
+// import Button from "../components/Button";
+// import Row from "../components/Row";
+// import Col from "../components/Col";
+import {Row, Col, Button} from "react-bootstrap";
 import './Home.css';
 
 class Home extends Component {
@@ -13,6 +14,7 @@ class Home extends Component {
   _id = "0";
   username = "";
   candidates = [];
+  uniqueDistricts;
 
   state = {
     username: "",
@@ -224,21 +226,43 @@ class Home extends Component {
     return (contest.electionOfficeId === this.state.officeId)
   }
 
-  // Test Button
+  arrayUnique = function (arr) {
+    return arr.filter(function(item, index){
+      return arr.indexOf(item) >= index;
+    });
+  };
+
+  getDistrictIds = (contest) => {
+    // Get a list of individual elections by district
+    const districts = contest.map(district => {
+      return (district.electionDistrictId)
+    })
+    // Remove duplicates from array
+    this.uniqueDistricts = this.arrayUnique(districts);
+    console.log(`uniqueDistricts: `, this.uniqueDistricts);
+  }
+
+  // Test Button - Need to link to Navbar dropdown menu
   candidateByOffice = (event) => {
     // console.log(`this.candidates: `, this.candidates)
     const arr = this.candidates.filter(this.filterByOfficeId)
     console.log(`arr: `, arr)
     this.setState({contest:arr});
+    this.getDistrictIds(arr);
   }
 
-  // Google API candidate list
+  // Google API candidate list - Do we want to harvest any info from here?
   testCandidate = (event) => {
     // test get candidate info
     const contestArr = this.state.contests.filter(this.filterByContest)
     console.log(`contestArr: `, contestArr)
   }
 
+  testStyle = {
+    width: "80%",
+    margin:"auto"
+  }
+  
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -273,8 +297,12 @@ class Home extends Component {
               handleFormSubmit={this.handleFormSubmit}
               handleInputChange={this.handleInputChange}
             ></SearchForm>
-            {/* Test Form & Buttons */}
-            <form>
+          </Col>
+        </Row>
+        {/* Test Form & Buttons */}
+        <Row className="voteSearch">
+          <Col>
+            <form style={this.testStyle}>
               <label htmlFor="testForm">Select Contest</label>
               <select 
                 value={this.state.officeId}
@@ -291,25 +319,27 @@ class Home extends Component {
                 <option value={44}>Secretary of State</option>
               </select>
             </form>
-            <Button
-              onClick={this.testCandidate}
-              className={"btn btn-primary"}
-            >
-              Get Google Civic Candidates
-            </Button>
-            <Button
-              onClick={this.candidateByOffice}
-              className={"btn btn-primary"}
-            >
-              Candidates By Office
-            </Button>
+            <div style={this.testStyle}>
+              <Button
+                onClick={this.testCandidate}
+                bsStyle={"primary"}
+              >
+                Get Google Civic Candidates
+              </Button>
+              <Button
+                onClick={this.candidateByOffice}
+                bsStyle={"primary"}
+              >
+                Candidates By Office
+              </Button>
 
-            <Button
-              onClick={this.updateVoter}
-              className={"btn btn-primary"}
-            >
-              Test Update Voter Info
-            </Button>
+              <Button
+                onClick={this.updateVoter}
+                bsStyle={"primary"}
+              >
+                Test Update Voter Info
+              </Button>
+            </div>
             {/* End of Test Stuff */}
           </Col>
         </Row>
@@ -318,7 +348,11 @@ class Home extends Component {
           <Col size="12">
             {/* Render only if there are candidates */}
             { this.state.contest.length > 0 &&
-              <Candidate candidates={this.state.contest}/>
+              <Candidate 
+                candidates={this.state.contest} 
+                districts={this.uniqueDistricts} 
+                name={this.state.contest[0].electionOffice}
+              />
             }
           </Col>
         </Row>
