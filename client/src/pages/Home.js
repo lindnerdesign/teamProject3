@@ -11,7 +11,8 @@ import './Home.css';
 class Home extends Component {
   stageId = "G"; // Set to General Election
   _id = "0";
-  username ="";
+  username = "";
+  candidates = [];
 
   state = {
     username: "",
@@ -23,8 +24,11 @@ class Home extends Component {
     state: "",
     zip: "",
 
-    candidates: [],
     podcasts: [],
+    candidates: [], // Might not need this in state
+    contests: [], // from google civic
+    contest: [],
+    officeId: "6" // Default to Senator
   }
 
   componentDidMount() {
@@ -64,9 +68,11 @@ class Home extends Component {
             pline1: res.data.pollingLocations[0].address.line1,
             pcity: res.data.pollingLocations[0].address.city,
             pstate: res.data.pollingLocations[0].address.state,
-            pzip: res.data.pollingLocations[0].address.zip
+            pzip: res.data.pollingLocations[0].address.zip,
+            contests: res.data.contests
           })
           console.log(` Your polling place: `, res.data.pollingLocations[0].address)
+          console.log(`Your contests`, res.data.contests)
         }
         else {
           console.log("Polling location not available")
@@ -104,6 +110,7 @@ class Home extends Component {
             electionDistrictName: candidate.electionDistrictName[0],
             electionOffice: candidate.electionOffice[0],
             electionOfficeId: candidate.electionOfficeId[0],
+            electionStateId: candidate.electionStateId[0],
             electionDate: candidate.electionDate[0],
             runningMateId: candidate.runningMateId[0],
             runningMateName: candidate.runningMateName[0],
@@ -118,10 +125,11 @@ class Home extends Component {
           return candidateObj
         })
     })
-    Promise.all(pCandidates).then((data) => {
+    return Promise.all(pCandidates).then(data => {
       console.log(`pCandidates: `, data)
       // Save the candidate list to state
-      this.setState({ candidates: data })
+      // this.setState({ candidates: data })
+      this.candidates = data;
     })
   }
 
@@ -208,6 +216,29 @@ class Home extends Component {
     return API.updateVoter(this._id, voterObj)
   }
 
+  filterByContest = (contest) => {
+    return ( contest.office.indexOf( this.state.contest ) > -1 )
+  }
+
+  filterByOfficeId = (contest) => {
+    return (contest.electionOfficeId === this.state.officeId)
+  }
+
+  // Test Button
+  candidateByOffice = (event) => {
+    // console.log(`this.candidates: `, this.candidates)
+    const arr = this.candidates.filter(this.filterByOfficeId)
+    console.log(`arr: `, arr)
+    this.setState({contest:arr});
+  }
+
+  // Google API candidate list
+  testCandidate = (event) => {
+    // test get candidate info
+    const contestArr = this.state.contests.filter(this.filterByContest)
+    console.log(`contestArr: `, contestArr)
+  }
+
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -243,6 +274,34 @@ class Home extends Component {
               handleInputChange={this.handleInputChange}
             ></SearchForm>
             {/* Test Form & Buttons */}
+            <form>
+              <label htmlFor="testForm">Select Contest</label>
+              <select 
+                value={this.state.officeId}
+                onChange={this.handleInputChange}
+                name="officeId"
+                className="form-control" id="testForm"
+              >
+                <option value={6}>U.S. Senator</option>
+                <option value={5}>U.S. Representative</option>
+                <option value={3}>Governor</option>
+                <option value={12}>Attorney General</option>
+                <option value={44}>Secretary of State</option>
+              </select>
+            </form>
+            <Button
+              onClick={this.testCandidate}
+              className={"btn btn-primary"}
+            >
+              Get Google Civic Candidates
+            </Button>
+            <Button
+              onClick={this.candidateByOffice}
+              className={"btn btn-primary"}
+            >
+              Candidates By Office
+            </Button>
+
             <Button
               onClick={this.updateVoter}
               className={"btn btn-primary"}
@@ -256,8 +315,8 @@ class Home extends Component {
         <Row>
           <Col size="12">
             {/* Render only if there are candidates */}
-            { this.state.candidates.length > 0 &&
-              <Candidate candidates={this.state.candidates}/>
+            { this.state.contest.length > 0 &&
+              <Candidate candidates={this.state.contest}/>
             }
           </Col>
         </Row>

@@ -32,7 +32,7 @@ class App extends Component {
           <Route path='/login' component={Login} />
           {/* <Route path='/login' component={() => <Login handleInputChange={this.handleInputChange} />} /> */}
           <Route path='/register' component={Register} />
-          <Route path='/:username' component={Home} />
+          {/* <Route path='/:username' component={Home} /> */}
         </Wrapper>
         <Footer />
       </div>

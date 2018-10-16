@@ -2,7 +2,6 @@ import React from "react";
 import "./Candidate.css";
 import {Grid, Row, Col, Thumbnail, Button} from "react-bootstrap";
 
-// Using the datalist element we can create autofill suggestions based on the props.breeds array
 const Candidate = props => (
   
   <div className="voteCandidate">
