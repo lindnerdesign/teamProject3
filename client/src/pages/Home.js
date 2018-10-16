@@ -3,6 +3,7 @@ import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 import Candidate from "../components/Candidate";
 import Podcast from "../components/Podcast";
+import NavBar from "../components/NavBar";
 import {Row, Col, Button} from "react-bootstrap";
 import './Home.css';
 
@@ -23,6 +24,7 @@ class Home extends Component {
     state: "",
     zip: "",
 
+    loggedIn:false,
     podcasts: [],
     candidates: [], // Might not need this in state
     contests: [], // from google civic
@@ -39,15 +41,12 @@ class Home extends Component {
     if (this.username && !this.state.username) {
       console.log(`username:`, this.username)
       this.setState({username:this.username})
+      this.setState({loggedIn:true})
       this.loadVoter();
     }
   }
 
-  logout = () => {
-    sessionStorage.removeItem('jwtToken');
-    sessionStorage.removeItem("username");
-    window.location.reload();
-  };
+
 
   callVoteSmart = (query) => {
     return API.apiVoteSmart(query)
@@ -286,6 +285,9 @@ class Home extends Component {
     return (
 
       <div className="test">
+      <Row className="voteSearch">
+      <NavBar loggedIn = {this.state.loggedIn} userName = {this.state.firstName}/>
+      </Row>
         <Row className="voteSearch">
           <Col size="12">
             <SearchForm

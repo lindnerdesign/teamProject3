@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.css';
 import API from "../../utils/API";
+import NavBar from "../NavBar";
+import {Row, Col, Button} from "react-bootstrap";
 
 class Login extends Component {
 
@@ -53,6 +55,9 @@ class Login extends Component {
     //const { username, password, message } = this.state;
     return (
       <div className="container">
+      <Row className="voteSearch">
+      <NavBar />
+      </Row>
         <form className="form-signin" onSubmit={this.onSubmit}>
           {this.state.message !== '' &&
             <div className="alert alert-warning alert-dismissible" role="alert">
