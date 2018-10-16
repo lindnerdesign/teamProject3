@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './Register.css';
 import API from "../../utils/API";
-
+import NavBar from "../NavBar";
+import {Row, Col, Button} from "react-bootstrap";
 
 class Create extends Component {
 
@@ -59,6 +60,9 @@ class Create extends Component {
     return (
 
       <div className="container">
+      <Row className="voteSearch">
+      <NavBar />
+      </Row>
         <form className="form-signin" onSubmit={this.onSubmit}>
           <h2 className="form-signin-heading">Register</h2>
           <input type="email" className="form-control" placeholder="Email address" name="username" value={username} onChange={this.handleInputChange} required />
