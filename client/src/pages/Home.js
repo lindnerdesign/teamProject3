@@ -3,9 +3,6 @@ import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 import Candidate from "../components/Candidate";
 import Podcast from "../components/Podcast";
-// import Button from "../components/Button";
-// import Row from "../components/Row";
-// import Col from "../components/Col";
 import {Row, Col, Button} from "react-bootstrap";
 import './Home.css';
 
@@ -360,23 +357,16 @@ class Home extends Component {
         <Row className="votePodcast">
           <Col size="12">
 
-            <Podcast 
-              podcasts={this.state.podcasts}
-              // thumbnail={this.state.thumbnail}
-              // title={this.state.title}
-              // description={this.state.description}
-              // length={this.state.length}
-              // audio={this.state.audio}
-              >
-            </Podcast>
-          
+            <Podcast podcasts={this.state.podcasts} />
+            <div>
             <Button
               onClick={this.testListenNotes}
-              style={{ marginBottom: 10 }}
-              className={"btn btn-success"}
+              bsStyle={"success"}
             >
               Test Listen Notes
             </Button>
+            </div>
+            {/* End Test Button */}
           </Col>
         </Row>
       </div>

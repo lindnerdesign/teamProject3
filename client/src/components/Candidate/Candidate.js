@@ -12,7 +12,7 @@ const Candidate = props => (
         <h3 className="text-center">{props.name}</h3>
         <Row>
         {props.candidates.map (candidate => (
-          // { candidate.electionDistrictId === district && (
+          candidate.electionDistrictId === district && (
           <Col key={candidate.candidateId} xs={12} sm={6} md={4}>
               <Thumbnail src={candidate.photo ? candidate.photo : "https://prd-wret.s3-us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/styles/atom_page_thumbnail/public/thumbnails/image/placeholder-profile_3.png?itok=rAELdVbe"} alt="242x200">
               <h3>{candidate.ballotName}</h3>
@@ -22,7 +22,7 @@ const Candidate = props => (
               <p>{candidate.homeCity} {candidate.homeState}</p>
             </Thumbnail>
           </Col>
-          // )}
+          )
         ))}
         </Row>
       </div>

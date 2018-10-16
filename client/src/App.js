@@ -9,12 +9,6 @@ import Login from "./components/authLogin";
 import Register from "./components/authRegister";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      login: false
-    }
-  };
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -25,7 +19,7 @@ class App extends Component {
     return (
       <Router>
       <div>
-        <NavBar login={this.state.login} />
+        <NavBar />
         <Hero />
         <Wrapper>
           <Route exact path="/" component={Home} />
