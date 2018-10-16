@@ -28,7 +28,7 @@ class App extends Component {
           <Route path='/register' component={Register} />
           {/* <Route path='/:username' component={Home} /> */}
         </Wrapper>
-        <Footer />
+        <FooterPage />
       </div>
     </Router>
     )
