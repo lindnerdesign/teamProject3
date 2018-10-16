@@ -9,11 +9,26 @@ import Login from "./components/authLogin";
 import Register from "./components/authRegister";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      login: false
+    }
+  };
+
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
+  };
+
+  updateLogin = ()=>{
+    if(sessionStorage.getItem('loggedIn')){
+      this.setState({
+        login:true
+      });
+    }
   };
   render() {
     return (

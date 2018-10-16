@@ -26,3 +26,7 @@ margin-bottom: 0px;
 .dropdown a:link{
     color: grey;
 }
+.loginUser{
+    color: whitesmoke;
+    margin-right: 5px
+}

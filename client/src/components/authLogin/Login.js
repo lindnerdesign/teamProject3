@@ -32,6 +32,7 @@ class Login extends Component {
         this.setState({ message: 'Login Successful' });
         this.setState({login:true})
         sessionStorage.setItem('username', this.state.username);
+        sessionStorage.setItem('loggedIn', true);
         this.props.history.push('/')
       })
       .catch((error) => {

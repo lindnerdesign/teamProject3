@@ -159,7 +159,9 @@ class Home extends Component {
             city: voterDB.data[0].address.city,
             state: voterDB.data[0].address.state,
             zip: voterDB.data[0].address.zip
-          })
+          });
+
+          sessionStorage.setItem('firstName', voterDB.data[0].firstName);
         }
         else {
           this.setState({
