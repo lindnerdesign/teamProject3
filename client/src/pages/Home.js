@@ -26,9 +26,11 @@ class Home extends Component {
 
     loggedIn:false,
     podcasts: [],
+    savedPodcasts: [],
+
     candidates: [], // Might not need this in state
     contests: [], // from google civic
-    contest: [],
+    contest: [], // 
     officeId: "6" // Default to Senator
   }
 
@@ -216,6 +218,15 @@ class Home extends Component {
     return API.updateVoter(this._id, voterObj)
   }
 
+  savePodcast = podcastObj => {
+    // Save podcast
+    console.log(`save podcast: `, podcastObj)
+    API.savePodcast(podcastObj)
+      .then(podcastDB => {
+        console.log(`podcastDB: `, podcastDB)
+      })
+  }
+
   filterByContest = (contest) => {
     return ( contest.office.indexOf( this.state.contest ) > -1 )
   }
@@ -224,14 +235,15 @@ class Home extends Component {
     return (contest.electionOfficeId === this.state.officeId)
   }
 
+  // Remove duplicates from array
   arrayUnique = function (arr) {
     return arr.filter(function(item, index){
       return arr.indexOf(item) >= index;
     });
   };
 
+  // Get a list of individual elections by district
   getDistrictIds = (contest) => {
-    // Get a list of individual elections by district
     const districts = contest.map(district => {
       return (district.electionDistrictId)
     })
@@ -240,7 +252,7 @@ class Home extends Component {
     console.log(`uniqueDistricts: `, this.uniqueDistricts);
   }
 
-  // Test Button - Need to link to Navbar dropdown menu
+  // Get candidates by office - used to display an individual contest
   candidateByOffice = (event) => {
     // console.log(`this.candidates: `, this.candidates)
     const arr = this.candidates.filter(this.filterByOfficeId)
@@ -249,7 +261,7 @@ class Home extends Component {
     this.getDistrictIds(arr);
   }
 
-  // Google API candidate list - Do we want to harvest any info from here?
+  // Google API candidate list - Do we want to harvest any info from here? Remove?
   testCandidate = (event) => {
     // test get candidate info
     const contestArr = this.state.contests.filter(this.filterByContest)
@@ -361,13 +373,13 @@ class Home extends Component {
         <Row className="votePodcast">
           <Col size="12">
 
-            <Podcast podcasts={this.state.podcasts} />
+            <Podcast podcasts={this.state.podcasts} savePodcast={this.savePodcast} />
             <div>
             <Button
               onClick={this.testListenNotes}
               bsStyle={"success"}
             >
-              Test Listen Notes
+              Get New Podcasts
             </Button>
             </div>
             {/* End Test Button */}

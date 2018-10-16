@@ -10,13 +10,25 @@ const Podcast = props => (
   <Grid>
   <Row>
     {props.podcasts.map(podcast => (
-      <Col xs={12} sm={6} md={4} key={podcast.podcastsId} className="podcastmap">
+      <Col xs={12} sm={6} md={4} key={podcast.id} className="podcastmap">
         <img src={podcast.thumbnail} alt="cover"/>
         <h3>{podcast.title_original}</h3>
         <p className="podcastscroll">{podcast.description_original}</p>
         <p>{podcast.audio_length}</p>
         <Button bsStyle="primary" href={podcast.audio}>Play</Button>
-        <Button bsStyle="success" className="podcastBtnSave">Save</Button>
+        <Button 
+          bsStyle="success" 
+          className="podcastBtnSave" 
+          onClick={() => props.savePodcast({
+            thumbnail:podcast.thumbnail,
+            title:podcast.title_original,
+            description:podcast.description_original,
+            length:podcast.audio_length,
+            audio:podcast.audio_length
+          })}
+        >
+          Save
+        </Button>
       </Col>
     ))}
   </Row>
