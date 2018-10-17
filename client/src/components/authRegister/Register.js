@@ -51,7 +51,17 @@ class Create extends Component {
         if (result.data.success === false) {
           this.setState({ message: result.data.msg });
         } else {
-          this.setState({ message: 'Registration Successful.' });
+          this.setState({ 
+            message: 'Registration Successful.',
+            username: '',
+            password: '',
+            firstName: '',
+            lastName: '',
+            line1: '',
+            city: '',
+            state: '',
+            zip: '' });
+            
         }
       });
   };
@@ -85,16 +95,6 @@ class Create extends Component {
               :null
               }</div>
                 <h2 className="form-signin-heading">Register</h2>
-                <input
-                  type="email"
-                  value={this.state.username}
-                  onChange={this.handleInputChange}
-                  name="username"
-                  type="text"
-                  className="form-control register"
-                  placeholder="Email address"
-                  required
-                />
                 <input
                   value={this.state.firstName}
                   onChange={this.handleInputChange}
@@ -144,8 +144,17 @@ class Create extends Component {
                   className="form-control register"
                   placeholder="ZIP Code"
                 />
+                <input id="email"
+                  type="email"
+                  value={this.state.username}
+                  onChange={this.handleInputChange}
+                  name="username"
+                  className="form-control register"
+                  placeholder="Email address"
+                  required
+                />
                 <input type="password" className="form-control register" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange} required />
-                <Button bsStyle="danger" className="btn btn-lg btn-primary" type="submit">Register</Button>
+                <Button bsStyle="danger" className="btn btn-lg btn-primary btn-block" type="submit">Register</Button>
               </form>
             </Col>
           </Row>

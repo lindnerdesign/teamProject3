@@ -32,7 +32,9 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-
+#email{
+  margin-bottom: 10px;
+}
 .register {
   margin: auto;
   width: 100%;
