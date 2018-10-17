@@ -2,12 +2,25 @@
   margin: 0 0 0 5px;
 }
 
-.podcastmap {
-  margin: 5px 0 25px 0;
-
+.podcastDel {
+  margin: 0 0 0 5px;
 }
 
-.podcastscroll {
-  overflow-y: scroll;
-  height: 150px;
+.podcastmap {
+  align-content: center;
+  margin-top: 10%;
+  padding: 0 35px 0 35px;
+}
+
+.searchbtn {
+  margin-bottom: 10%;
+}
+
+
+.scrollbar {
+    float: left;
+    height: 150px;
+    background: #fff;
+    overflow-y: scroll;
+    margin-bottom: 25px;
 }
