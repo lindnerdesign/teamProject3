@@ -31,6 +31,7 @@ export default {
   },
   // Find voter info with the given _id
   getVoterById: function(id) {
+    console.log(`api id: `, id)
     return axios.get(`/voter/${id}`);
   },
   // Deletes voter info with the given _id - Remove?
@@ -56,7 +57,7 @@ export default {
     return axios.post("/login", loginData);
   },
   // Save podcast
-  savePodcast: function(podcastData){
-    return axios.post("/podcast", podcastData)
+  savePodcast: function(podcastData,voterId){
+    return axios.post(`/podcast/${podcastData.podcastId}/${voterId}`, podcastData)
   }
 };

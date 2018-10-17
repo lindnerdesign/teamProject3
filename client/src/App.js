@@ -24,9 +24,7 @@ class App extends Component {
         <Wrapper>
           <Route exact path="/" component={Home} />
           <Route path='/login' component={Login} />
-          {/* <Route path='/login' component={() => <Login handleInputChange={this.handleInputChange} />} /> */}
           <Route path='/register' component={Register} />
-          {/* <Route path='/:username' component={Home} /> */}
         </Wrapper>
         <FooterPage />
       </div>

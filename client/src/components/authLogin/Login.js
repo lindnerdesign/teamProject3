@@ -32,7 +32,8 @@ class Login extends Component {
       .then((result) => {
         sessionStorage.setItem('jwtToken', result.data.token);
         this.setState({ message: 'Login Successful' });
-        this.setState({ login: true })
+        this.setState({login:true});
+        sessionStorage.setItem('_id', result.data._id);
         sessionStorage.setItem('username', this.state.username);
         sessionStorage.setItem('loggedIn', true);
         this.props.history.push('/')

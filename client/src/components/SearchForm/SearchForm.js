@@ -55,6 +55,15 @@ const SearchForm = props => (
       >
         Search
       </button>
+      { props.loggedIn ? 
+        <button
+          type="submit"
+          onClick={props.updateVoter}
+          className="btn btn-primary"
+        >
+          Update
+        </button>
+        : null }
     </div>
   </form>
   </Col >

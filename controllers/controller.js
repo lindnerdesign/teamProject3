@@ -73,21 +73,24 @@ module.exports = (app) => {
 
   // Database Routes
 
-  // Find
-  app.get("/voter", function (req, res) {
-    db.Voter
-      .find(req.query)
-      .then(dbModel => {
-        console.log(`getVoter: ${dbModel}`)
-        res.json(dbModel)
-      })
-      .catch(err => res.status(422).json(err));
-  });
+  // Find Voter
+  // app.get("/voter", function (req, res) {
+  //   console.log(`app.get`, req.query)
+  //   db.Voter
+  //     .findOne(req.query)
+  //     .populate("podcasts")
+  //     .then(dbModel => {
+  //       console.log(`getVoter: ${dbModel}`)
+  //       res.json(dbModel)
+  //     })
+  //     .catch(err => res.status(422).json(err));
+  // });
 
   // Find voter by id
   app.get("/voter/:id", function (req, res) {
     db.Voter
       .findById(req.params.id)
+      .populate("podcasts")
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   });
@@ -136,7 +139,7 @@ module.exports = (app) => {
             // if user is found and password is right create a token
             var token = jwt.sign(user.toJSON(), settings.secret);
             // return the information including token as JSON
-            res.json({success: true, token: 'JWT ' + token});
+            res.json({success: true, token: 'JWT ' + token, _id:user._id});
           } else {
             res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
           }
@@ -157,17 +160,30 @@ module.exports = (app) => {
   // Update voter info
   app.put("/voter/:id", function (req, res) {
     db.Voter
-      .findOneAndUpdate({ _id: req.params.id }, req.body, { upsert: true })
+      .findOneAndUpdate({ _id: req.params.id }, req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   })
 
-  // Save podcast
-  app.post("/podcast", (req, res) => {
-    db.Podcast
-      .create(req.body)
-      .then(dbModel => res.json(dbModel))
+  // Save a new Podcast to the db and associating it with a Voter
+  app.post("/podcast/:podcastId/:voterId", function(req, res) {
+    // If podcast not in db then create a new podcast
+    db.Podcast.create(req.body)
+    // db.Podcast.findOneAndUpdate({podcastId:req.params.podcastId},req.body,{upsert:true, returnNewDocument:true})
+      .then(dbPodcast => {
+        return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $push: { podcasts: dbPodcast._id } }, { new: true });
+      })
+      .then(dbVoter => res.json(dbVoter))
       .catch(err => res.status(422).json(err));
-  })
+    });
+
+  // Find voter and populate with their podcasts
+  app.get("/populatedVoter/:id", function(req, res) {
+    // Find all users
+    db.Voter.find({_id:req.params.id})
+      .populate("podcasts")
+      .then(dbVoter => res.json(dbVoter))
+      .catch(err => res.json(err));
+  });
 
 } // End of Module Export
