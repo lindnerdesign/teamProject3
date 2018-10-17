@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './Login.css';
 import API from "../../utils/API";
 import NavBar from "../NavBar";
-import { Row, Col, Button, Grid } from "react-bootstrap";
+import { Row, Button } from "react-bootstrap";
 
 class Login extends Component {
 
@@ -64,12 +64,11 @@ class Login extends Component {
             </div>
           }
           <h2 className="form-signin-heading">Please sign in</h2>
-           <input
+           <input id="email"
             type="email"
             value={this.state.username}
             onChange={this.handleInputChange}
             name="username"
-            type="text"
             className="form-control register"
             placeholder="Email address"
             required

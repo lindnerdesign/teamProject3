@@ -47,7 +47,9 @@ body {
   margin-left: 5%;
   float: left;
 }
-
+#email{
+  margin-bottom: 10px;
+}
 .form-control {
   margin: 0px 0 10px 0;
 }
