@@ -38,7 +38,10 @@ class Home extends Component {
     console.log(`did`)
     this._id = window.sessionStorage.getItem("_id");
     console.log(`id`, this._id)
-    this.loadVoter();
+    this.loadVoter()
+    .then(res => {
+      this.getInfo()
+    })
   }
 
   componentDidUpdate() {
@@ -49,7 +52,7 @@ class Home extends Component {
       this.setState({loggedIn:true})
       this._id = window.sessionStorage.getItem("_id");
       console.log(`will`)
-      this.loadVoter()
+      // this.loadVoter()
       // .then(res => {
       //   console.log(`will`)
       // //   // this.getInfo()
@@ -151,6 +154,7 @@ class Home extends Component {
       console.log(`pCandidates: `, data)
       // Save the candidate list to state
       this.candidates = data;
+      this.candidateByOffice()
     })
   }
 
@@ -231,9 +235,12 @@ class Home extends Component {
       })
   }
 
-  // Delete podcast from voter's podcast list
-  deletePodcast = (event) => {
-    // Under construction
+  // Remove podcast from voter's podcast list
+  removePodcast = id => {
+    API.removePodcast(id,this._id)
+      .then(voterDB => {
+        console.log(`remove: `, voterDB)
+      })
   }
 
   // Return an array of candidates for a specific contest (i.e. Senate) - Used with Google Civic API
@@ -265,12 +272,12 @@ class Home extends Component {
   }
 
   // Get candidates by office - display an individual contest - used with VoteSmart API
-  candidateByOffice = (event) => {
+  candidateByOffice = () => {
     // console.log(`this.candidates: `, this.candidates)
     const arr = this.candidates.filter(this.filterByOfficeId)
     console.log(`arr: `, arr)
-    this.setState({contest:arr});
     this.getDistrictIds(arr);
+    this.setState({contest:arr});
   }
 
   // Google API candidate list - Do we want to harvest any info from here? Remove?
@@ -386,7 +393,7 @@ class Home extends Component {
           <Col size="12">
             {/* Render only if there are saved podcasts */}
             { this.state.savedPodcasts.length > 0 &&
-              <SavedPodcasts podcasts={this.state.savedPodcasts} deletePodcast={this.deletePodcast} />
+              <SavedPodcasts podcasts={this.state.savedPodcasts} removePodcast={this.removePodcast} />
             }
           </Col>
         </Row>

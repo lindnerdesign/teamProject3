@@ -7,6 +7,7 @@ var passport = require('passport');
 var settings = require('../config/settings');
 require('../config/passport')(passport);
 var jwt = require('jsonwebtoken');
+var ObjectId = require('mongoose').Types.ObjectId; 
 
 // Exports
 module.exports = (app) => {
@@ -96,12 +97,12 @@ module.exports = (app) => {
   });
 
   // Save voter info
-  app.post("/voter", (req, res) => {
-    db.Voter
-      .create(req.body)
-      .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err));
-  })
+  // app.post("/voter", (req, res) => {
+  //   db.Voter
+  //     .create(req.body)
+  //     .then(dbModel => res.json(dbModel))
+  //     .catch(err => res.status(422).json(err));
+  // })
 
   //Register Voter - Saves voter to db
   app.post('/register', function (req, res) {
@@ -149,13 +150,13 @@ module.exports = (app) => {
   });
 
   // Delete voter by id
-  app.delete("/voter/:id", function (req, res) {
-    db.Voter
-      .findById({ _id: req.params.id })
-      .then(dbModel => dbModel.remove())
-      .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err));
-  })
+  // app.delete("/voter/:id", function (req, res) {
+  //   db.Voter
+  //     .findById({ _id: req.params.id })
+  //     .then(dbModel => dbModel.remove())
+  //     .then(dbModel => res.json(dbModel))
+  //     .catch(err => res.status(422).json(err));
+  // })
 
   // Update voter info
   app.put("/voter/:id", function (req, res) {
@@ -177,13 +178,21 @@ module.exports = (app) => {
       .catch(err => res.status(422).json(err));
     });
 
+  // Remove podcast from voter's list
+  app.put("/podcast/:podcastId/:voterId", function(req, res) {
+    return db.Voter.update(
+      {_id: req.params.voterId}, 
+      {$pull: {podcasts: ObjectId(req.params.podcastId)}}
+    )
+  })
+  
   // Find voter and populate with their podcasts
-  app.get("/populatedVoter/:id", function(req, res) {
-    // Find all users
-    db.Voter.find({_id:req.params.id})
-      .populate("podcasts")
-      .then(dbVoter => res.json(dbVoter))
-      .catch(err => res.json(err));
-  });
+  // app.get("/populatedVoter/:id", function(req, res) {
+  //   // Find all users
+  //   db.Voter.find({_id:req.params.id})
+  //     .populate("podcasts")
+  //     .then(dbVoter => res.json(dbVoter))
+  //     .catch(err => res.json(err));
+  // });
 
 } // End of Module Export

@@ -19,9 +19,7 @@ const SavedPodcasts = props => (
         <Button 
           bsStyle="danger" 
           className="podcastBtnSave" 
-          onClick={() => props.deletePodcast({
-            _id:podcast._id
-          })}
+          onClick={() => props.removePodcast(podcast._id)}
         >
           Delete
         </Button>
