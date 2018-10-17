@@ -32,12 +32,8 @@ class Login extends Component {
       .then((result) => {
         sessionStorage.setItem('jwtToken', result.data.token);
         this.setState({ message: 'Login Successful' });
-<<<<<<< HEAD
-        this.setState({ login: true })
-=======
         this.setState({login:true});
         sessionStorage.setItem('_id', result.data._id);
->>>>>>> Display saved & new podcasts, fix user display info when logged out
         sessionStorage.setItem('username', this.state.username);
         sessionStorage.setItem('loggedIn', true);
         this.props.history.push('/')
