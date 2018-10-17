@@ -5,7 +5,7 @@ import {Grid, Row, Col, Button} from "react-bootstrap";
 const Podcast = props => (
   
   <div className="podcast">
-  <h1 className="addressheader text-center">Your Podcasts</h1>
+  <h1 className="addressheader text-center">New Podcasts</h1>
 
   <Grid>
   <Row>
@@ -16,6 +16,8 @@ const Podcast = props => (
         <p className="podcastscroll">{podcast.description_original}</p>
         <p>{podcast.audio_length}</p>
         <Button bsStyle="primary" href={podcast.audio}>Play</Button>
+        {/* If logged in, then show the Save button */}
+        {props.loggedIn ? 
         <Button 
           bsStyle="success" 
           className="podcastBtnSave" 
@@ -30,6 +32,7 @@ const Podcast = props => (
         >
           Save
         </Button>
+        : null }
       </Col>
     ))}
   </Row>

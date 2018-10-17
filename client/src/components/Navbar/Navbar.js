@@ -20,6 +20,7 @@ class NavBar extends Component {
     sessionStorage.removeItem("username");
     sessionStorage.removeItem("firstName");
     sessionStorage.removeItem("loggedIn");
+    sessionStorage.removeItem("_id");
     window.location="/";
   };
 
@@ -44,12 +45,12 @@ class NavBar extends Component {
           </span>
 
           {this.props.loggedIn && this.props.userName 
-          ? <Link to="/">
+          ? (<Link to="/">
             <Button bsStyle="danger" onClick={this.logout}>Sign Out</Button>
           </Link> 
-          : <Link to="/login">
+          ): (<Link to="/login">
               <Button bsStyle="danger">Sign In</Button>
-            </Link>}
+          </Link>)}
         </Navbar.Form>
 
       </Navbar.Collapse>

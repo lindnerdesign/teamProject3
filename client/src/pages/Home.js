@@ -3,14 +3,15 @@ import API from "../utils/API";
 import SearchForm from "../components/SearchForm";
 import Candidate from "../components/Candidate";
 import Podcast from "../components/Podcast";
+import SavedPodcasts from "../components/SavedPodcasts";
 import NavBar from "../components/NavBar";
 import {Row, Col, Button} from "react-bootstrap";
 import './Home.css';
 
 class Home extends Component {
   stageId = "G"; // Set to General Election
-  _id = "0";
   username = "";
+  _id = "0"; // Can not be null
   candidates = [];
   uniqueDistricts;
 
@@ -28,13 +29,15 @@ class Home extends Component {
     podcasts: [],
     savedPodcasts: [],
 
-    candidates: [], // Might not need this in state
     contests: [], // from google civic
-    contest: [], //  Used to pass subset of contests to Candidates component
+    contest: [], //  Used to pass subset of contests (i.e. Senate race) to Candidates component
     officeId: "6" // Default to Senator
   }
 
   componentDidMount() {
+    console.log(`did`)
+    this._id = window.sessionStorage.getItem("_id");
+    console.log(`id`, this._id)
     this.loadVoter();
   }
 
@@ -44,11 +47,15 @@ class Home extends Component {
       console.log(`username:`, this.username)
       this.setState({username:this.username})
       this.setState({loggedIn:true})
-      this.loadVoter();
+      this._id = window.sessionStorage.getItem("_id");
+      console.log(`will`)
+      this.loadVoter()
+      // .then(res => {
+      //   console.log(`will`)
+      // //   // this.getInfo()
+      // })
     }
   }
-
-
 
   callVoteSmart = (query) => {
     return API.apiVoteSmart(query)
@@ -90,6 +97,20 @@ class Home extends Component {
     .catch(err => console.log(err));
   };
 
+  // Get polling & candidate info
+  getInfo = () => {
+    this.callCivic();
+    this.getCandidates(this.state.zip, this.stageId)
+    .then(res => {
+      // console.log(`candidates by zip: `, res)
+      // If candidate list != 0, parse response into an object
+      if (res.data.candidateList.candidate.length) {
+        this.parseCandidates(res.data.candidateList.candidate)
+      }
+    })
+  }
+
+  // Get candidates by zip code from VoteSmart API
   getCandidates = (zip, stageId) => {
     const query = {
       command: "Candidates.getByZip",
@@ -98,6 +119,7 @@ class Home extends Component {
     return this.callVoteSmart(query)
   }
 
+  // Parse response from VoteSmart API into object
   parseCandidates = (candidates) => {
     let pCandidates = candidates.map(candidate => {
       return this.getCandidateBio(candidate.candidateId[0])
@@ -128,11 +150,11 @@ class Home extends Component {
     return Promise.all(pCandidates).then(data => {
       console.log(`pCandidates: `, data)
       // Save the candidate list to state
-      // this.setState({ candidates: data })
       this.candidates = data;
     })
   }
 
+  // Get Candidate Bio using VoteSmart API
   getCandidateBio = (candidateId) => {
     const query = {
       command: "CandidateBio.getBio",
@@ -141,70 +163,49 @@ class Home extends Component {
     return this.callVoteSmart(query)
   }
 
-  getVoter = () => {
-    const query = { username: this.username }
-    console.log(`getVoter query`, query)
-    return API.getVoter(query)
+  // Find voter by id
+  getVoter = (id) => {
+    console.log(`getVoter id`, id)
+    return API.getVoterById(id)
   }
 
+  // Get voter information and set state variables
   loadVoter = () => {
-    this.getVoter()
+    console.log(`loadVoter start _id:`,this._id)
+    return this.getVoter(this._id)
       .then(voterDB => {
         console.log(`loadVoter: `, voterDB)
-        if (voterDB.data.length) {
-          this._id = voterDB.data[0]._id;
+        // If voter found in db, set state variables
+        // if (voterDB.data.length) {
+          // this._id = voterDB.data[0]._id;
           this.setState({
-            firstName: voterDB.data[0].firstName,
-            lastName: voterDB.data[0].lastName,
-            line1: voterDB.data[0].address.line1,
-            city: voterDB.data[0].address.city,
-            state: voterDB.data[0].address.state,
-            zip: voterDB.data[0].address.zip,
-            voterId: voterDB.data[0]._id
+            firstName: voterDB.data.firstName,
+            lastName: voterDB.data.lastName,
+            line1: voterDB.data.address.line1,
+            city: voterDB.data.address.city,
+            state: voterDB.data.address.state,
+            zip: voterDB.data.address.zip,
+            savedPodcasts: voterDB.data.podcasts
           });
-
-          sessionStorage.setItem('firstName', voterDB.data[0].firstName);
-        }
-        else {
-          this.setState({
-            line1: "",
-            city: "",
-            state: "",
-            zip: ""
-          })
-        }
+        
+          sessionStorage.setItem('firstName', voterDB.data.firstName);
+        // }
+        // Else, clear state variables
+        // else {
+        //   this.setState({
+        //     line1: "",
+        //     city: "",
+        //     state: "",
+        //     zip: "",
+        //     firstName: "",
+        //     lastName: "",
+        //     savedPodcasts: []
+        //   })
+        // }
       })
   }
 
-  saveVoter = event => {
-    // Check if voter already saved in db
-    this.getVoter()
-      .then(voterDB => {
-        if (voterDB.data.length) {
-          console.log(`Voter in db`)
-          // return voterDB.data;
-        }
-        else {
-          // Save voter info to db
-          const voterObj = {
-            name: this.state.voterName,
-            address: {
-              line1: this.state.line1,
-              city: this.state.city,
-              state: this.state.state,
-              zip: this.state.zip
-            }
-          }
-          API.saveVoter(voterObj)
-            .then(voterDB => {
-              this._id = voterDB.data._id;
-              console.log(`Save _id: ${this._id}`)
-            })
-        }
-      })
-      .catch(err => console.log(err));
-  }
-
+  // Update voter information
   updateVoter = (event) => {
     // Update voter info in db
     const voterObj = {
@@ -219,19 +220,28 @@ class Home extends Component {
     return API.updateVoter(this._id, voterObj)
   }
 
+  // Save podcast to Podcasts collection, and push on to voter's list of saved podcasts
   savePodcast = podcastObj => {
-    // Save podcast
+    // Save podcast, pass voter._id to save to voter document
     console.log(`save podcast: `, podcastObj)
     API.savePodcast(podcastObj,this._id)
       .then(podcastDB => {
         console.log(`podcastDB: `, podcastDB)
+        this.setState({savedPodcasts:podcastDB})
       })
   }
 
+  // Delete podcast from voter's podcast list
+  deletePodcast = (event) => {
+    // Under construction
+  }
+
+  // Return an array of candidates for a specific contest (i.e. Senate) - Used with Google Civic API
   filterByContest = (contest) => {
     return ( contest.office.indexOf( this.state.contest ) > -1 )
   }
 
+  // Return an array of candidates for a specific contest (i.e. Senate) - Used with VoteSmart API
   filterByOfficeId = (contest) => {
     return (contest.electionOfficeId === this.state.officeId)
   }
@@ -244,6 +254,7 @@ class Home extends Component {
   };
 
   // Get a list of individual elections by district
+  // Return an array with unique Office Ids (in a district there may be 2 contest i.e. 2 Senate Races)
   getDistrictIds = (contest) => {
     const districts = contest.map(district => {
       return (district.electionDistrictId)
@@ -253,7 +264,7 @@ class Home extends Component {
     console.log(`uniqueDistricts: `, this.uniqueDistricts);
   }
 
-  // Get candidates by office - used to display an individual contest
+  // Get candidates by office - display an individual contest - used with VoteSmart API
   candidateByOffice = (event) => {
     // console.log(`this.candidates: `, this.candidates)
     const arr = this.candidates.filter(this.filterByOfficeId)
@@ -283,15 +294,7 @@ class Home extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    this.callCivic();
-
-    this.getCandidates(this.state.zip, this.stageId).then(res => {
-      // console.log(`candidates by zip: `, res)
-      // If candidate list != 0, parse response into an object
-      if (res.data.candidateList.candidate.length) {
-        this.parseCandidates(res.data.candidateList.candidate)
-      }
-    })
+    this.getInfo();
   };
 
   render() {
@@ -308,8 +311,10 @@ class Home extends Component {
               city={this.state.city}
               state={this.state.state}
               zip={this.state.zip}
+              loggedIn={this.state.loggedIn}
               handleFormSubmit={this.handleFormSubmit}
               handleInputChange={this.handleInputChange}
+              updateVoter={this.updateVoter}
             ></SearchForm>
           </Col>
         </Row>
@@ -344,7 +349,7 @@ class Home extends Component {
                 onClick={this.candidateByOffice}
                 bsStyle={"primary"}
               >
-                Candidates By Office
+                Show Candidates
               </Button>
 
               <Button
@@ -352,6 +357,12 @@ class Home extends Component {
                 bsStyle={"primary"}
               >
                 Test Update Voter Info
+              </Button>
+              <Button
+                onClick={this.testListenNotes}
+                bsStyle={"success"}
+              >
+                Get New Podcasts
               </Button>
             </div>
             {/* End of Test Stuff */}
@@ -373,17 +384,19 @@ class Home extends Component {
 
         <Row className="votePodcast">
           <Col size="12">
+            {/* Render only if there are saved podcasts */}
+            { this.state.savedPodcasts.length > 0 &&
+              <SavedPodcasts podcasts={this.state.savedPodcasts} deletePodcast={this.deletePodcast} />
+            }
+          </Col>
+        </Row>
 
-            <Podcast podcasts={this.state.podcasts} savePodcast={this.savePodcast} />
-            <div>
-            <Button
-              onClick={this.testListenNotes}
-              bsStyle={"success"}
-            >
-              Get New Podcasts
-            </Button>
-            </div>
-            {/* End Test Button */}
+        <Row className="votePodcast">
+          <Col size="12">
+            {/* Render only if there are new podcasts */}
+            { this.state.podcasts.length > 0 &&
+              <Podcast podcasts={this.state.podcasts} savePodcast={this.savePodcast} loggedIn={this.state.loggedIn}/>
+            }
           </Col>
         </Row>
       </div>

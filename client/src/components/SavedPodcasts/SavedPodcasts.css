@@ -1,0 +1,13 @@
+.podcastBtnSave {
+  margin: 0 0 0 5px;
+}
+
+.podcastmap {
+  margin: 5px 0 25px 0;
+
+}
+
+.podcastscroll {
+  overflow-y: scroll;
+  height: 150px;
+}
