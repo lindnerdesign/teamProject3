@@ -20,6 +20,7 @@ const Podcast = props => (
           bsStyle="success" 
           className="podcastBtnSave" 
           onClick={() => props.savePodcast({
+            podcastId:podcast.id,
             thumbnail:podcast.thumbnail,
             title:podcast.title_original,
             description:podcast.description_original,

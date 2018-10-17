@@ -56,7 +56,7 @@ export default {
     return axios.post("/login", loginData);
   },
   // Save podcast
-  savePodcast: function(podcastData){
-    return axios.post("/podcast", podcastData)
+  savePodcast: function(podcastData,voterId){
+    return axios.post(`/podcast/${podcastData.podcastId}/${voterId}`, podcastData)
   }
 };

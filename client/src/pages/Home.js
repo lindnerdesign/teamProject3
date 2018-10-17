@@ -30,7 +30,7 @@ class Home extends Component {
 
     candidates: [], // Might not need this in state
     contests: [], // from google civic
-    contest: [], // 
+    contest: [], //  Used to pass subset of contests to Candidates component
     officeId: "6" // Default to Senator
   }
 
@@ -159,7 +159,8 @@ class Home extends Component {
             line1: voterDB.data[0].address.line1,
             city: voterDB.data[0].address.city,
             state: voterDB.data[0].address.state,
-            zip: voterDB.data[0].address.zip
+            zip: voterDB.data[0].address.zip,
+            voterId: voterDB.data[0]._id
           });
 
           sessionStorage.setItem('firstName', voterDB.data[0].firstName);
@@ -221,7 +222,7 @@ class Home extends Component {
   savePodcast = podcastObj => {
     // Save podcast
     console.log(`save podcast: `, podcastObj)
-    API.savePodcast(podcastObj)
+    API.savePodcast(podcastObj,this._id)
       .then(podcastDB => {
         console.log(`podcastDB: `, podcastDB)
       })
