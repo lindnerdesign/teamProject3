@@ -2,10 +2,6 @@
   margin: 0 0 0 5px;
 }
 
-.podcastDel {
-  margin: 0 0 0 5px;
-}
-
 .podcastmap {
   align-content: center;
   margin-top: 10%;
@@ -15,7 +11,6 @@
 .searchbtn {
   margin-bottom: 10%;
 }
-
 
 .scrollbar {
     float: left;
