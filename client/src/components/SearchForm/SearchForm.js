@@ -6,10 +6,10 @@ import MediaQuery from 'react-responsive';
 const SearchForm = props => (
   
 <Grid> 
-  <Row>
+<h1 className="addressheader text-center">Find your Polling Place</h1>
+  <Row id="searchdiv">
   <Col xs={12} sm={8} md={8}>
   <form>
-  <h1 className="addressheader text-center">Find your Polling Place</h1>
     <div className="form-group search">
       <label htmlFor="fulladdress">Please fill out your address here</label>
       <input
@@ -51,7 +51,7 @@ const SearchForm = props => (
       <button
         type="submit"
         onClick={props.handleFormSubmit}
-        className="btn btn-success"
+        className="btn btn-success searchbtn"
       >
         Search
       </button>
@@ -66,10 +66,14 @@ const SearchForm = props => (
         : null }
     </div>
   </form>
+
+  <div className="pollresults">
+    <strong>Your Polling Place:</strong>
+  </div>
   </Col >
 
   <Col xs={12} sm={2} md={2}>
-  <MediaQuery minWidth={650}>
+  <MediaQuery minWidth={775}>
     <Image className="pollingimg" src="/polling.png" />
   </MediaQuery>
   </Col>

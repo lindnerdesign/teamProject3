@@ -2,3 +2,26 @@
   background-color: whitesmoke;
   padding: 25px 0 25px 0;
 }
+
+.candidateimg {
+  border: solid 5px white;
+}
+
+.candidatep {
+  line-height: .75em;
+}
+
+.addressheader {
+  padding: 15px;
+  margin: 0 100px 0 100px;
+  border-bottom: 1px solid lightgray;
+}
+
+.subhead {
+  padding: 25 0 0 0;
+  margin: 25px 0 20px 0;
+}
+
+.candidatemap {
+  padding: 15px 35px 0 35px;
+}

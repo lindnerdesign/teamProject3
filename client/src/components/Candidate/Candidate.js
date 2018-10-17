@@ -1,6 +1,6 @@
 import React from "react";
 import "./Candidate.css";
-import {Grid, Row, Col, Thumbnail} from "react-bootstrap";
+import {Grid, Row, Col} from "react-bootstrap";
 
 const Candidate = props => (
   
@@ -9,18 +9,18 @@ const Candidate = props => (
   <Grid>
     {props.districts.map(district => (
       <div key={district}>
-        <h3 className="text-center">{props.name}</h3>
+        <h2 className="subhead text-center">{props.name}</h2>
         <Row>
         {props.candidates.map (candidate => (
           candidate.electionDistrictId === district && (
-          <Col key={candidate.candidateId} xs={12} sm={6} md={4}>
-              <Thumbnail src={candidate.photo ? candidate.photo : "https://prd-wret.s3-us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/styles/atom_page_thumbnail/public/thumbnails/image/placeholder-profile_3.png?itok=rAELdVbe"} alt="242x200">
+          <Col key={candidate.candidateId} xs={12} sm={6} md={3} className="candidatemap">
+              <img src={candidate.photo ? candidate.photo : "../../candidate-holder.jpg"} alt="242x200" className="candidateimg" height="250" />
               <h3>{candidate.ballotName}</h3>
-              <p>{candidate.electionOffice}</p>
-              <p>{candidate.electionDistrictName}</p>
-              <p>{candidate.electionParties}</p>
-              <p>{candidate.homeCity} {candidate.homeState}</p>
-            </Thumbnail>
+              <p className="candidatep"><strong>Office:</strong> {candidate.electionOffice}</p>
+              <p className="candidatep"><strong>District:</strong> {candidate.electionDistrictName}</p>
+              <p className="candidatep"><strong>Party:</strong> {candidate.electionParties}</p>
+              <p className="candidatep"><strong>Religion:</strong> {candidate.religion}</p>
+              <p className="candidatep"><strong>Home:</strong> {candidate.homeCity}, {candidate.homeState}</p>
           </Col>
           )
         ))}
