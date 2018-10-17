@@ -1,9 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import "./NavBar.css";
-import { Navbar, Nav, NavItem, Button } from "react-bootstrap";
+import { Navbar, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-//const NavBar = () => (
 class NavBar extends Component {
   constructor(props) {
     super(props);
@@ -22,20 +21,6 @@ class NavBar extends Component {
     sessionStorage.removeItem("_id");
     window.location="/";
   };
-  <Navbar fluid inverse fixedTop>
-  <Navbar.Header>
-    <Navbar.Brand>
-      <a href="/">VOTE NOW</a>
-    </Navbar.Brand>
-    <Navbar.Toggle />
-  </Navbar.Header>
-  
-  {/* <Navbar.Collapse>
-    <Nav>
-      <NavItem eventKey={1} href="/" className="navlink">
-        Home
-      </NavItem>
-    </Nav> */}
 
   render() {
     return (<Navbar fluid inverse fixedTop>
