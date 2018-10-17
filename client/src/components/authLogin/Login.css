@@ -38,4 +38,16 @@ body {
 }
 .form-signin p {
   margin-top: 10px;
+  font-size: medium;
+}
+.login {
+  margin: auto;
+  width: 100%;
+  align-content: center;
+  margin-left: 5%;
+  float: left;
+}
+
+.form-control {
+  margin: 0px 0 10px 0;
 }

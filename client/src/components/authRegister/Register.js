@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Register.css';
+import { Link } from 'react-router-dom';
 import API from "../../utils/API";
 import NavBar from "../NavBar";
 import { Row, Col, Button, Grid } from "react-bootstrap";
@@ -50,9 +51,7 @@ class Create extends Component {
         if (result.data.success === false) {
           this.setState({ message: result.data.msg });
         } else {
-          this.setState({ message: 'Registration Successful. Please Login now' });
-          //this.props.history.push("/login")
-
+          this.setState({ message: 'Registration Successful.' });
         }
       });
   };
@@ -63,7 +62,6 @@ class Create extends Component {
     });
   };
   render() {
-    const { username, password } = this.state;
     return (
 
       <div className="container">
@@ -78,22 +76,14 @@ class Create extends Component {
               {this.state.message !== ''
               ? <div>
               {this.state.message.toString().includes('Successful') ?
-                  (<div className="alert alert-success alert-success" role="alert">
-                    {this.state.message}
-                  </div>):(<div className="alert alert-success alert-danger" role="alert">
+                  (<div className="alert alert-success" role="alert">
+                    {this.state.message} Please  <Link to="/login">Click Here </Link> to Login
+                  </div>):(<div className="alert alert-danger" role="alert">
                     {this.state.message}
                   </div>)}
               </div>
               :null
-              }
-                {/* {this.state.message.toString().includes('Successful') ?
-                  (<div className="alert alert-success alert-success" role="alert">
-                    {this.state.message}
-                  </div>):
-                  ({this.state.message !== '' ? (<div className="alert alert-success alert-danger" role="alert">
-                    {this.state.message}
-                  </div>):null})} */}
-                  </div>
+              }</div>
                 <h2 className="form-signin-heading">Register</h2>
                 <input
                   type="email"
@@ -154,8 +144,8 @@ class Create extends Component {
                   className="form-control register"
                   placeholder="ZIP Code"
                 />
-                <input type="password" className="form-control register" placeholder="Password" name="password" value={password} onChange={this.handleInputChange} required />
-                <Button className="btn btn-lg btn-primary" type="submit">Register</Button>
+                <input type="password" className="form-control register" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange} required />
+                <Button bsStyle="danger" className="btn btn-lg btn-primary" type="submit">Register</Button>
               </form>
             </Col>
           </Row>

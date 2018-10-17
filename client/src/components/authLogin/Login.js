@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './Login.css';
 import API from "../../utils/API";
 import NavBar from "../NavBar";
-import {Row, Col, Button} from "react-bootstrap";
+import { Row, Col, Button, Grid } from "react-bootstrap";
 
 class Login extends Component {
 
@@ -24,21 +24,21 @@ class Login extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-      const login={
-        username: this.state.username,
-        password: this.state.password
-      }
-      API.loginVoter(login)
+    const login = {
+      username: this.state.username,
+      password: this.state.password
+    }
+    API.loginVoter(login)
       .then((result) => {
         sessionStorage.setItem('jwtToken', result.data.token);
         this.setState({ message: 'Login Successful' });
-        this.setState({login:true})
+        this.setState({ login: true })
         sessionStorage.setItem('username', this.state.username);
         sessionStorage.setItem('loggedIn', true);
         this.props.history.push('/')
       })
       .catch((error) => {
-        if(error.response.status === 401) {
+        if (error.response.status === 401) {
           this.setState({ message: 'Login failed. Username or password do not match' });
         }
       });
@@ -52,24 +52,31 @@ class Login extends Component {
   };
 
   render() {
-    //const { username, password, message } = this.state;
     return (
       <div className="container">
-      <Row className="voteSearch">
-      <NavBar />
-      </Row>
+        <Row className="voteSearch">
+          <NavBar />
+        </Row>
         <form className="form-signin" onSubmit={this.onSubmit}>
           {this.state.message !== '' &&
-            <div className="alert alert-warning alert-dismissible" role="alert">
-              { this.state.message }
+            <div className="alert alert-danger alert-dismissible" role="alert">
+              {this.state.message}
             </div>
           }
           <h2 className="form-signin-heading">Please sign in</h2>
-          <label name="inputEmail" className="sr-only">Email address</label>
-          <input type="email" className="form-control" placeholder="Email address" name="username" value={this.state.username} onChange={this.handleInputChange} required/>
-          <label name="inputPassword" className="sr-only">Password</label>
-          <input type="password" className="form-control" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange} required/>
-          <button className="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+           <input
+            type="email"
+            value={this.state.username}
+            onChange={this.handleInputChange}
+            name="username"
+            type="text"
+            className="form-control register"
+            placeholder="Email address"
+            required
+          />
+          <input type="password" className="form-control register" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange} required />
+
+          <Button bsStyle="danger" className="btn btn-lg btn-primary btn-block" type="submit">Login</Button>
           <p>
             Not a member? <Link to="/register"><span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
           </p>
