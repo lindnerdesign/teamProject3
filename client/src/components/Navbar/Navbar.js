@@ -34,7 +34,7 @@ class NavBar extends Component {
       <Navbar.Collapse>
         <Navbar.Form pullRight>
           <span className="loginUser">
-            {this.props.loggedIn ? `Hi ${this.props.userName}!` : null}
+            {this.props.loggedIn ? `Hi ${this.props.userName}` : null}
           </span>
 
           {this.props.loggedIn && this.props.userName 

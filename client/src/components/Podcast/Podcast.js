@@ -15,7 +15,7 @@ const Podcast = props => (
         <h3>{podcast.title_original}</h3>
         <p className="podcastscroll">{podcast.description_original}</p>
         <p>{podcast.audio_length}</p>
-        <Button bsStyle="primary" className="podcastPlay btn-lg" href={podcast.audio}><i class="fas fa-play-circle"></i></Button>
+        <Button bsStyle="primary" className="podcastPlay btn-lg" href={podcast.audio} target="_blank"><i className="fas fa-play-circle"></i></Button>
         {/* If logged in, then show the Save button */}
         {props.loggedIn ? 
         <Button 
@@ -30,7 +30,7 @@ const Podcast = props => (
             audio:podcast.audio_length
           })}
         >
-        <i class="fas fa-plus-square"></i>
+        <i className="fas fa-plus-square"></i>
         </Button>
         : null }
       </Col>
