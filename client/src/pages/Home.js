@@ -25,6 +25,12 @@ class Home extends Component {
     state: "",
     zip: "",
 
+    plocationName: "",
+    pline1: "",
+    pcity: "",
+    pstate: "",
+    pzip: "",
+
     loggedIn:false,
     podcasts: [],
     savedPodcasts: [],
@@ -52,11 +58,6 @@ class Home extends Component {
       this.setState({loggedIn:true})
       this._id = window.sessionStorage.getItem("_id");
       console.log(`will`)
-      // this.loadVoter()
-      // .then(res => {
-      //   console.log(`will`)
-      // //   // this.getInfo()
-      // })
     }
   }
 
@@ -193,19 +194,6 @@ class Home extends Component {
           });
         
           sessionStorage.setItem('firstName', voterDB.data.firstName);
-        // }
-        // Else, clear state variables
-        // else {
-        //   this.setState({
-        //     line1: "",
-        //     city: "",
-        //     state: "",
-        //     zip: "",
-        //     firstName: "",
-        //     lastName: "",
-        //     savedPodcasts: []
-        //   })
-        // }
       })
   }
 
@@ -288,8 +276,9 @@ class Home extends Component {
   }
 
   testStyle = {
-    width: "80%",
-    margin:"auto"
+    width: "50%",
+    marginLeft: "15%",
+    float: "left"
   }
   
   handleInputChange = event => {
@@ -333,6 +322,14 @@ class Home extends Component {
               handleInputChange={this.handleInputChange}
               updateVoter={this.updateVoter}
             ></SearchForm>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={8} md={8}>
+            <div className="pollresults">
+              <strong>Your Polling Place:</strong>
+              <p><b>{this.state.plocationName}:</b> {this.state.pline1}, {this.state.pcity}, {this.state.zip}</p>
+            </div>
           </Col>
         </Row>
         {/* Test Form & Buttons */}
