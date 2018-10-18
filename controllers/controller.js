@@ -180,19 +180,10 @@ module.exports = (app) => {
 
   // Remove podcast from voter's list
   app.put("/podcast/:podcastId/:voterId", function(req, res) {
-    return db.Voter.update(
-      {_id: req.params.voterId}, 
-      {$pull: {podcasts: ObjectId(req.params.podcastId)}}
-    )
+    console.log('We are here!')
+    return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $pull: { podcasts: req.params.podcastId}}, (err, doc) => {})
+    .then(dbVoter => res.json(dbVoter))
+    .catch(err => res.status(422).json(err));
   })
   
-  // Find voter and populate with their podcasts
-  // app.get("/populatedVoter/:id", function(req, res) {
-  //   // Find all users
-  //   db.Voter.find({_id:req.params.id})
-  //     .populate("podcasts")
-  //     .then(dbVoter => res.json(dbVoter))
-  //     .catch(err => res.json(err));
-  // });
-
 } // End of Module Export
