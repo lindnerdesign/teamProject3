@@ -19,3 +19,7 @@
     overflow-y: scroll;
     margin-bottom: 25px;
 }
+
+.podimage {
+  border: solid 5px whitesmoke;
+}

@@ -10,15 +10,15 @@ const SavedPodcasts = props => (
   <Grid>
   <Row>
     {props.podcasts.map(podcast => (
-      <Col xs={12} sm={6} md={4} key={podcast._id} className="podcastmap">
-        <img src={podcast.thumbnail} alt="cover"/>
+      <Col xs={12} sm={6} md={6} key={podcast._id} className="podcastmap">
+        <img src={podcast.thumbnail} alt="cover" className="podimage"/>
         <h3>{podcast.title}</h3>
         <p className="scrollbar">{podcast.description}</p>
         <p>{podcast.audio_length}</p>
-        <Button bsStyle="primary" href={podcast.audio} target="_blank"><i className="fas fa-play-circle"></i></Button>
+        <Button bsStyle="primary btn-lg" href={podcast.audio} target="_blank"><i className="fas fa-play-circle"></i></Button>
         <Button 
           bsStyle="danger" 
-          className="podcastDel" 
+          className="podcastDel btn-lg" 
           onClick={() => props.removePodcast(podcast._id)}
         >
           <i className="fas fa-trash-alt"></i>
