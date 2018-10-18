@@ -225,8 +225,10 @@ class Home extends Component {
 
   // Remove podcast from voter's podcast list
   removePodcast = id => {
+    console.log(`remove podcast`)
     API.removePodcast(id,this._id)
       .then(voterDB => {
+        // this.setState({savedPodcasts:voterDB.data.podcasts})
         console.log(`remove: `, voterDB)
       })
   }
@@ -324,6 +326,7 @@ class Home extends Component {
             ></SearchForm>
           </Col>
         </Row>
+        {this.state.plocationName ? 
         <Row>
           <Col xs={12} sm={8} md={8}>
             <div className="pollresults">
@@ -332,9 +335,10 @@ class Home extends Component {
             </div>
           </Col>
         </Row>
+        : null}
         {/* Test Form & Buttons */}
         <Row className="voteSearch">
-          <Col>
+          <Col xs={12} sm={8} md={8}>
             <form style={this.testStyle}>
               <h3 htmlFor="testForm">Select Contest</h3>
               <select 
@@ -354,20 +358,19 @@ class Home extends Component {
               </select>
             </form>
             <div style={this.testStyle}>
-              <Button
+              {/* <Button
                 onClick={this.testCandidate}
                 bsStyle={"primary"}
               >
                 Get Google Civic Candidates
-              </Button>
+              </Button> */}
 
-
-              <Button
+              {/* <Button
                 onClick={this.updateVoter}
                 bsStyle={"primary"}
               >
                 Test Update Voter Info
-              </Button>
+              </Button> */}
               <Button
                 onClick={this.testListenNotes}
                 bsStyle={"success"}
