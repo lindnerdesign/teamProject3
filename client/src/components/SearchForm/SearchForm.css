@@ -23,16 +23,20 @@
 
 .pollingimg {
   align-content: center;
-  padding-top: 5%;
+  padding-top: 20%;
   margin:auto;
-}
-
-#searchdiv {
-  border-bottom: 1px solid lightgray;
 }
 
 .pollresults {
   margin-left: 5%;
   margin-bottom: 5%;
+  float: left;
+}
+
+.pollupdate {
+  margin: 0 0 0 5px;
+}
+
+.searchbtn {
   float: left;
 }

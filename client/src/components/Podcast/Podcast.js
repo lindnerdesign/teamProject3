@@ -10,17 +10,17 @@ const Podcast = props => (
   <Grid>
   <Row>
     {props.podcasts.map(podcast => (
-      <Col xs={12} sm={6} md={4} key={podcast.id} className="podcastmap">
-        <img src={podcast.thumbnail} alt="cover"/>
+      <Col xs={12} sm={6} md={6} key={podcast.id} className="podcastmap">
+        <img src={podcast.thumbnail} alt="cover" className="podimage"/>
         <h3>{podcast.title_original}</h3>
-        <p className="podcastscroll">{podcast.description_original}</p>
+        <p className="scrollbar">{podcast.description_original}</p>
         <p>{podcast.audio_length}</p>
         <Button bsStyle="primary" className="podcastPlay btn-lg" href={podcast.audio} target="_blank"><i className="fas fa-play-circle"></i></Button>
         {/* If logged in, then show the Save button */}
         {props.loggedIn ? 
         <Button 
           bsStyle="success" 
-          className="podcastBtnSave" 
+          className="podcastBtnSave btn-lg" 
           onClick={() => props.savePodcast({
             podcastId:podcast.id,
             thumbnail:podcast.thumbnail,
