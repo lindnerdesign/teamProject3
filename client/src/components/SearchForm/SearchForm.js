@@ -11,7 +11,7 @@ const SearchForm = props => (
   <Col xs={12} sm={8} md={8}>
   <form>
     <div className="form-group search">
-      <label htmlFor="fulladdress">Please fill out your address here</label>
+      <h3 htmlFor="fulladdress">Please fill out your address here</h3>
       <input
         value={props.line1}
         onChange={props.handleInputChange}
@@ -55,6 +55,7 @@ const SearchForm = props => (
       >
         Search
       </button>
+
       { props.loggedIn ? 
         <button
           type="submit"
@@ -68,7 +69,7 @@ const SearchForm = props => (
   </form>
 
   <div className="pollresults">
-    <strong>Your Polling Place:</strong>
+    <h3>Your Polling Place:</h3>
   </div>
   </Col >
 

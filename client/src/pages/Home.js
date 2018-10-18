@@ -339,7 +339,7 @@ class Home extends Component {
         <Row className="voteSearch">
           <Col>
             <form style={this.testStyle}>
-              <label htmlFor="testForm">Select Contest</label>
+              <h3 htmlFor="testForm">Select Contest</h3>
               <select 
                 value={this.state.officeId}
                 onChange={this.handleInputChange}

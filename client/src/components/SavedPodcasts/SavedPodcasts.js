@@ -15,13 +15,13 @@ const SavedPodcasts = props => (
         <h3>{podcast.title}</h3>
         <p className="scrollbar">{podcast.description}</p>
         <p>{podcast.audio_length}</p>
-        <Button bsStyle="primary" href={podcast.audio}><i class="fas fa-play-circle"></i></Button>
+        <Button bsStyle="primary" href={podcast.audio} target="_blank"><i className="fas fa-play-circle"></i></Button>
         <Button 
           bsStyle="danger" 
           className="podcastDel" 
           onClick={() => props.removePodcast(podcast._id)}
         >
-          <i class="fas fa-trash-alt"></i>
+          <i className="fas fa-trash-alt"></i>
         </Button>
       </Col>
     ))}
