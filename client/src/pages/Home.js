@@ -293,10 +293,20 @@ class Home extends Component {
   }
   
   handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
+    console.log(event.target.name);
+    if(event.target.name ==='officeId'){
+      const { name, value } = event.target;
+      this.setState({
+        [name]: value
+      },
+      ()=>{this.candidateByOffice()});
+      
+    }else{
+      const { name, value } = event.target;
+      this.setState({
+        [name]: value
+      });
+    }
   };
 
   handleFormSubmit = event => {
@@ -333,6 +343,7 @@ class Home extends Component {
               <select 
                 value={this.state.officeId}
                 onChange={this.handleInputChange}
+                //onSelect={this.candidateByOffice}
                 name="officeId"
                 className="form-control" id="testForm"
               >
@@ -352,12 +363,7 @@ class Home extends Component {
               >
                 Get Google Civic Candidates
               </Button>
-              <Button
-                onClick={this.candidateByOffice}
-                bsStyle={"primary"}
-              >
-                Show Candidates
-              </Button>
+
 
               <Button
                 onClick={this.updateVoter}
