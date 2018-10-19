@@ -67,10 +67,6 @@ const SearchForm = props => (
         : null }
     </div>
   </form>
-
-  <div className="pollresults">
-    <h3>Your Polling Place:</h3>
-  </div>
   </Col >
 
   <Col xs={12} sm={2} md={2}>

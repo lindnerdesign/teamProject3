@@ -25,6 +25,12 @@ class Home extends Component {
     state: "",
     zip: "",
 
+    plocationName: "",
+    pline1: "",
+    pcity: "",
+    pstate: "",
+    pzip: "",
+
     loggedIn:false,
     podcasts: [],
     savedPodcasts: [],
@@ -52,11 +58,6 @@ class Home extends Component {
       this.setState({loggedIn:true})
       this._id = window.sessionStorage.getItem("_id");
       console.log(`will`)
-      // this.loadVoter()
-      // .then(res => {
-      //   console.log(`will`)
-      // //   // this.getInfo()
-      // })
     }
   }
 
@@ -193,19 +194,6 @@ class Home extends Component {
           });
         
           sessionStorage.setItem('firstName', voterDB.data.firstName);
-        // }
-        // Else, clear state variables
-        // else {
-        //   this.setState({
-        //     line1: "",
-        //     city: "",
-        //     state: "",
-        //     zip: "",
-        //     firstName: "",
-        //     lastName: "",
-        //     savedPodcasts: []
-        //   })
-        // }
       })
   }
 
@@ -237,8 +225,10 @@ class Home extends Component {
 
   // Remove podcast from voter's podcast list
   removePodcast = id => {
+    console.log(`remove podcast`)
     API.removePodcast(id,this._id)
       .then(voterDB => {
+        // this.setState({savedPodcasts:voterDB.data.podcasts})
         console.log(`remove: `, voterDB)
       })
   }
@@ -288,8 +278,9 @@ class Home extends Component {
   }
 
   testStyle = {
-    width: "80%",
-    margin:"auto"
+    width: "50%",
+    marginLeft: "15%",
+    float: "left"
   }
   
   handleInputChange = event => {
@@ -335,9 +326,19 @@ class Home extends Component {
             ></SearchForm>
           </Col>
         </Row>
+        {this.state.plocationName ? 
+        <Row>
+          <Col xs={12} sm={8} md={8}>
+            <div className="pollresults">
+              <strong>Your Polling Place:</strong>
+              <p><b>{this.state.plocationName}:</b> {this.state.pline1}, {this.state.pcity}, {this.state.zip}</p>
+            </div>
+          </Col>
+        </Row>
+        : null}
         {/* Test Form & Buttons */}
         <Row className="voteSearch">
-          <Col>
+          <Col xs={12} sm={8} md={8}>
             <form style={this.testStyle}>
               <h3 htmlFor="testForm">Select Contest</h3>
               <select 
@@ -357,20 +358,19 @@ class Home extends Component {
               </select>
             </form>
             <div style={this.testStyle}>
-              <Button
+              {/* <Button
                 onClick={this.testCandidate}
                 bsStyle={"primary"}
               >
                 Get Google Civic Candidates
-              </Button>
+              </Button> */}
 
-
-              <Button
+              {/* <Button
                 onClick={this.updateVoter}
                 bsStyle={"primary"}
               >
                 Test Update Voter Info
-              </Button>
+              </Button> */}
               <Button
                 onClick={this.testListenNotes}
                 bsStyle={"success"}
