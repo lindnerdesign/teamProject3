@@ -9,8 +9,9 @@ const SavedPodcasts = props => (
 
   <Grid>
   <Row>
-    {props.podcasts.map(podcast => (
-      <Col xs={12} sm={6} md={6} key={podcast._id} className="podcastmap">
+    {props.podcasts.map((podcast, i) => (
+      // Possibility of a same podcast saved multiple times, create a unique key for duplicates
+      <Col xs={12} sm={6} md={6} key={i+podcast._id} className="podcastmap">
         <img src={podcast.thumbnail} alt="cover" className="podimage"/>
         <h3>{podcast.title}</h3>
         <p className="scrollbar">{podcast.description}</p>

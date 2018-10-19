@@ -32,6 +32,7 @@ class Home extends Component {
     pzip: "",
 
     loggedIn:false,
+    message: "",
     podcasts: [],
     savedPodcasts: [],
 
@@ -216,20 +217,21 @@ class Home extends Component {
   savePodcast = podcastObj => {
     // Save podcast, pass voter._id to save to voter document
     console.log(`save podcast: `, podcastObj)
+    console.log(`this._id: `, this._id)
     API.savePodcast(podcastObj,this._id)
       .then(podcastDB => {
-        console.log(`podcastDB: `, podcastDB)
-        this.setState({savedPodcasts:podcastDB})
+        console.log(`Save podcastDB: `, podcastDB)
+        this.setState({savedPodcasts:podcastDB.data.podcasts})
       })
   }
 
   // Remove podcast from voter's podcast list
   removePodcast = id => {
-    console.log(`remove podcast`)
+    console.log(`remove podcast id: `, this._id)
     API.removePodcast(id,this._id)
       .then(voterDB => {
-        // this.setState({savedPodcasts:voterDB.data.podcasts})
-        console.log(`remove: `, voterDB)
+        this.setState({savedPodcasts:voterDB.data.podcasts})
+        console.log(`Remove podcast: `, voterDB)
       })
   }
 
@@ -266,8 +268,15 @@ class Home extends Component {
     // console.log(`this.candidates: `, this.candidates)
     const arr = this.candidates.filter(this.filterByOfficeId)
     console.log(`arr: `, arr)
-    this.getDistrictIds(arr);
-    this.setState({contest:arr});
+    if (arr.length) {
+      this.getDistrictIds(arr);
+      this.setState({contest:arr});
+      this.setState({message: ""}); // Clear message
+    }
+    else {
+      this.setState({ message: `Contest not on the ballot this election in your district.` });
+      this.setState({contest: []}) // Clear contest array
+    }
   }
 
   // Google API candidate list - Do we want to harvest any info from here? Remove?
@@ -314,6 +323,7 @@ class Home extends Component {
       </Row>
         <Row className="voteSearch">
           <Col size="12">
+
             <SearchForm
               line1={this.state.line1}
               city={this.state.city}
@@ -339,6 +349,14 @@ class Home extends Component {
         {/* Test Form & Buttons */}
         <Row className="voteSearch">
           <Col xs={12} sm={8} md={8}>
+        <div className="">
+        {this.state.message !== '' &&
+          <div className="alert alert-danger alert-dismissible" role="alert">
+            {this.state.message}
+          </div>
+        }
+        </div>
+
             <form style={this.testStyle}>
               <h3 htmlFor="testForm">Select Contest</h3>
               <select 
