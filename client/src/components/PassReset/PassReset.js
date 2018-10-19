@@ -92,7 +92,7 @@ class PassReset extends Component {
                   }</div>
                 <h2 className="form-signin-heading">Password Reset</h2>
                 <label name="inputPassword" className="sr-only">Password</label>
-                <input type="password" className="form-control" placeholder="Password" name="password" value={this.state.password} onChange={this.handleInputChange} required />
+                <input type="password" className="form-control" placeholder="New Password" name="password" value={this.state.password} onChange={this.handleInputChange} required />
                 <label name="inputPassword" className="sr-only">Password</label>
                 <input type="password" className="form-control" placeholder="Confirm Password" name="confirmpassword" value={this.state.changepassword} onChange={this.handleInputChange} required />
                 <span>{this.state.message}</span>
