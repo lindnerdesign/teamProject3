@@ -6,7 +6,7 @@ import MediaQuery from 'react-responsive';
 const SearchForm = props => (
   
 <Grid> 
-<h1 className="addressheader text-center">Find your Polling Place</h1>
+<h1 className="addressheader text-center">Find your Polling Place and Candidates</h1>
   <Row id="searchdiv">
   <Col xs={12} sm={8} md={8}>
   <form>

@@ -21,7 +21,7 @@ module.exports = (app) => {
 
     // Convert query.params to an object, combine two objects to create new params object for api query
     const params = { "key": keysFile.votesmart.key, ...JSON.parse(req.query.params) }
-    console.log(params);
+    // console.log(params);
 
     axios.get(query, {
       params: params
@@ -175,15 +175,11 @@ module.exports = (app) => {
       // where: {
       "username": req.body.email
       // id: req.user.id
-
       // }
     })
       .then(dbUser => {
         console.log("User from db:  ", dbUser)
         if (dbUser) {
-
-
-
           var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -198,7 +194,6 @@ module.exports = (app) => {
             subject: 'PASSWORD RESET',
             html: "We received a request to reset the password for the Vote Now account associated with this e-mail address. If you made this request, please click <a href='" + url + "'>here</a><br/>If you did not request to have your password reset you can safely ignore this email.<br/><br/>Regards,<br/><br/>Vote Now"
           };
-
           transporter.sendMail(mailOptions, function (error, info) {
             console.log('SEND TO EMAIL');
             if (error) {
@@ -210,8 +205,6 @@ module.exports = (app) => {
           res.json({
             "Success": "Email Sent Successfully."
           })
-
-
         } else {
           res.json({
             message: 'This username is already taken.'
@@ -220,7 +213,6 @@ module.exports = (app) => {
       }).catch(function (err) {
         console.log(err);
       });
-
   });
 
   app.post('/passwordreset/savePass', function (req, res) {
@@ -238,29 +230,32 @@ module.exports = (app) => {
           res.status(200).send({ success: true, msg: 'Password changed successfully.' });
         }
       })
-
   });
 
   // Save a new Podcast to the db and associating it with a Voter
   app.post("/podcast/:podcastId/:voterId", function (req, res) {
     // If podcast not in db then create a new podcast
-    db.Podcast.create(req.body)
-      // db.Podcast.findOneAndUpdate({podcastId:req.params.podcastId},req.body,{upsert:true, returnNewDocument:true})
+    // db.Podcast.create(req.body)
+    console.log('begin')
+    console.log(req.params.voterId)
+
+    db.Podcast.findOneAndUpdate({podcastId:req.params.podcastId},req.body,{upsert:true, returnNewDocument:true})
       .then(dbPodcast => {
-        return db.Voter.findOneAndUpdate({ _id: req.params.voterId }, { $push: { podcasts: dbPodcast._id } }, { new: true });
-      })
-      .then(dbVoter => res.json(dbVoter))
-      .catch(err => res.status(422).json(err));
-  });
+        console.log('Save Podcast')
+        console.log(JSON.stringify(dbPodcast))
+        console.log(req.params.voterId)
+        return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $push: { podcasts: (dbPodcast._id ? dbPodcast._id : req.params.podcastId)} }, { new: true })
+              .populate("podcasts")
+              .then(dbVoter => res.json(dbVoter))
+              .catch(err => res.status(422).json(err));
+        })
+    });
 
   // Remove podcast from voter's list
-
-
   app.put("/podcast/:podcastId/:voterId", function(req, res) {
-    console.log('We are here!')
     return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $pull: { podcasts: req.params.podcastId}}, (err, doc) => {})
+    .populate("podcasts")
     .then(dbVoter => res.json(dbVoter))
     .catch(err => res.status(422).json(err));
   })
-  
 } // End of Module Export
