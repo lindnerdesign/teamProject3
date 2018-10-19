@@ -1,10 +1,49 @@
 .voteSearch {
-    background-color: white;
-    padding: 25px 0 25px 0;
+    padding: 0 0 0 0;
+    margin: 0px 0 0px 0;
+    align-content: center;
 }
 
 .votePodcast {
-    background-color: white;
     padding: 25px 0 25px 0;
 }
 
+.pollresults {
+    margin: 0 0 0 0;
+  }
+
+  #testForm {
+    align-content: center;
+    margin-left: 10%;
+    float: left;
+    padding-top: 30px;
+    width: 80%;
+  }
+
+  .newDiv {
+      background-color: #3d70b0;
+      padding: 10px 0 10px 0;
+      color: white;
+  }
+
+@media only screen and (max-width: 600px) {
+    .pollresults {
+        background-color:  #3d70b0;
+        padding: 10px 0 5px 0;
+        color: white;
+    }
+
+    .newPods {
+        padding: 40px 0 25px 0;
+    }
+}
+
+  .newpodbtn {
+      align-content: center;
+  }
+
+  .addressheader {
+    padding: 25px 0 10px 0px;
+    margin: 0 0px 0 0px;
+    border-bottom: 1px solid lightgray;
+  }

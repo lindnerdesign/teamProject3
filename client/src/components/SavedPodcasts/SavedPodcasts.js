@@ -13,7 +13,7 @@ const SavedPodcasts = props => (
       // Possibility of a same podcast saved multiple times, create a unique key for duplicates
       <Col xs={12} sm={6} md={6} key={i+podcast._id} className="podcastmap">
         <img src={podcast.thumbnail} alt="cover" className="podimage"/>
-        <h3>{podcast.title}</h3>
+        <h3 className="scrollbartitle">{podcast.title}</h3>
         <p className="scrollbar">{podcast.description}</p>
         <p>{podcast.audio_length}</p>
         <Button bsStyle="primary" className="btn-lg" href={podcast.audio} target="_blank"><i className="fas fa-play-circle"></i></Button>

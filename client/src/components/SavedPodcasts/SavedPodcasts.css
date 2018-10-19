@@ -23,3 +23,8 @@
 .podimage {
   border: solid 5px whitesmoke;
 }
+
+.scrollbartitle {
+  height: 55px;
+  overflow-y: scroll;
+}

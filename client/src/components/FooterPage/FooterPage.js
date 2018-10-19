@@ -11,8 +11,7 @@ const FooterPage = () => (
       <Col md="4" className="title">
       <h3>Vote Now</h3>
       <p>
-        VOTE NOW is an application made to help inform people where their polling place is located, who their candidates are and provides informational resources.
-        VOTE NOW's helpful resources includ podcasts and links leading the user to a variety of resources that allows them to make a educated and informed decision.
+      VOTE NOW is an application to encourage people to actively engage and participate in the elections by providing information about where to vote and a list of their candidates. VOTE NOW's helpful resources include podcasts and links to a variety of resources that allows them to make a educated and informed decision.
       </p>
       </Col>
 

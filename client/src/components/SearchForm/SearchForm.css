@@ -1,40 +1,25 @@
 .search {
-  margin: auto;
-  width: 90%;
+  width: 80%;
   align-content: center;
-  margin-left: 5%;
+  margin-left: 10%;
   float: left;
-  padding-top: 40px;
-}
+  padding-top: 30px;
+  margin-bottom: 0;
 
-.form-control {
-  margin: 0px 0 10px 0;
 }
 
 #address {
   float: right;
-  margin-top: 10px;
-}
-
-.addressheader {
-  margin-top: 50px;
-  padding-bottom: 40px;
 }
 
 .pollingimg {
   align-content: center;
   padding-top: 20%;
-  margin:auto;
-}
-
-.pollresults {
-  margin-left: 20%;
-  margin-bottom: 5%;
-  float: left;
+  margin: auto;
 }
 
 .pollupdate {
-  margin: 0 0 0 5px;
+  margin: 0 5% 0 5px;
 }
 
 .searchbtn {
