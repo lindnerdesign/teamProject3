@@ -32,7 +32,7 @@ class Login extends Component {
       .then((result) => {
         sessionStorage.setItem('jwtToken', result.data.token);
         this.setState({ message: 'Login Successful' });
-        this.setState({login:true});
+        this.setState({ login: true });
         sessionStorage.setItem('_id', result.data._id);
         sessionStorage.setItem('username', this.state.username);
         sessionStorage.setItem('loggedIn', true);
@@ -65,7 +65,7 @@ class Login extends Component {
             </div>
           }
           <h2 className="form-signin-heading">Please sign in</h2>
-           <input id="email"
+          <input id="email"
             type="email"
             value={this.state.username}
             onChange={this.handleInputChange}
@@ -79,6 +79,9 @@ class Login extends Component {
           <Button bsStyle="danger" className="btn btn-lg btn-primary btn-block" type="submit">Login</Button>
           <p>
             Not a member? <Link to="/register"><span className="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Register here</Link>
+          </p>
+          <p>
+            Forgot Password? <Link to="/passwordrequest"><span className="glyphicon glyphicon-envelope" aria-hidden="true"></span> Click here</Link>
           </p>
         </form>
       </div>
