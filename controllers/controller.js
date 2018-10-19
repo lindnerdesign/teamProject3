@@ -10,7 +10,9 @@ var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 var ObjectId = require('mongoose').Types.ObjectId;
 var bcrypt = require('bcrypt-nodejs');
-var serverUrl = "http://localhost:3000/passwordreset/";
+var pageUrl = "/passwordreset/";
+
+
 // Exports
 module.exports = (app) => {
   // Routes
@@ -187,12 +189,22 @@ module.exports = (app) => {
               pass: 'Jjh@5682'
             }
           });
-          var url = serverUrl + req.body.email;
+          //get host from request
+          var hostname = req.get('host');
+
+          if(app.get('env')==='development'){
+             hostname = 'localhost:3000';
+          }
+           
+          console.log(app.get('env'));
+          var url = req.protocol + '://' + hostname + pageUrl + req.body.email;
+         
+          console.log(url);
           var mailOptions = {
             from: 'votenow2121@gmail.com',
             to: req.body.email,
-            subject: 'PASSWORD RESET',
-            html: "We received a request to reset the password for the Vote Now account associated with this e-mail address. If you made this request, please click <a href='" + url + "'>here</a><br/>If you did not request to have your password reset you can safely ignore this email.<br/><br/>Regards,<br/><br/>Vote Now"
+            subject: 'VOTENOW PASSWORD RESET',
+            html: "We received a request to reset the password for the Vote Now account associated with this e-mail address. If you made this request, please <a href='" + url + "'><strong>Click Here</strong></a><br/>If you did not request to have your password reset you can safely ignore this email.<br/><br/>Regards,<br/><br/>Vote Now"
           };
           transporter.sendMail(mailOptions, function (error, info) {
             console.log('SEND TO EMAIL');
@@ -239,23 +251,23 @@ module.exports = (app) => {
     console.log('begin')
     console.log(req.params.voterId)
 
-    db.Podcast.findOneAndUpdate({podcastId:req.params.podcastId},req.body,{upsert:true, returnNewDocument:true})
+    db.Podcast.findOneAndUpdate({ podcastId: req.params.podcastId }, req.body, { upsert: true, returnNewDocument: true })
       .then(dbPodcast => {
         console.log('Save Podcast')
         console.log(JSON.stringify(dbPodcast))
         console.log(req.params.voterId)
-        return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $push: { podcasts: (dbPodcast._id ? dbPodcast._id : req.params.podcastId)} }, { new: true })
-              .populate("podcasts")
-              .then(dbVoter => res.json(dbVoter))
-              .catch(err => res.status(422).json(err));
-        })
-    });
+        return db.Voter.findOneAndUpdate({ _id: req.params.voterId }, { $push: { podcasts: (dbPodcast._id ? dbPodcast._id : req.params.podcastId) } }, { new: true })
+          .populate("podcasts")
+          .then(dbVoter => res.json(dbVoter))
+          .catch(err => res.status(422).json(err));
+      })
+  });
 
   // Remove podcast from voter's list
-  app.put("/podcast/:podcastId/:voterId", function(req, res) {
-    return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $pull: { podcasts: req.params.podcastId}}, (err, doc) => {})
-    .populate("podcasts")
-    .then(dbVoter => res.json(dbVoter))
-    .catch(err => res.status(422).json(err));
+  app.put("/podcast/:podcastId/:voterId", function (req, res) {
+    return db.Voter.findOneAndUpdate({ _id: req.params.voterId }, { $pull: { podcasts: req.params.podcastId } }, (err, doc) => { })
+      .populate("podcasts")
+      .then(dbVoter => res.json(dbVoter))
+      .catch(err => res.status(422).json(err));
   })
 } // End of Module Export
