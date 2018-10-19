@@ -6,6 +6,8 @@ import FooterPage from "./components/FooterPage";
 import Wrapper from "./components/Wrapper";
 import Login from "./components/authLogin";
 import Register from "./components/authRegister";
+import PassReq from "./components/PassReq";
+import PassReset from "./components/PassReset";
 
 class App extends Component {
 
@@ -25,6 +27,8 @@ class App extends Component {
           <Route exact path="/" component={Home} />
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
+          <Route path='/passwordrequest' component={PassReq}/>
+          <Route path='/passwordreset/:email' component={PassReset}/>
         </Wrapper>
         <FooterPage />
       </div>

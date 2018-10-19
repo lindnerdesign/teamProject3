@@ -7,8 +7,10 @@ var passport = require('passport');
 var settings = require('../config/settings');
 require('../config/passport')(passport);
 var jwt = require('jsonwebtoken');
-var ObjectId = require('mongoose').Types.ObjectId; 
-
+var nodemailer = require('nodemailer');
+var ObjectId = require('mongoose').Types.ObjectId;
+var bcrypt = require('bcrypt-nodejs');
+var serverUrl = "http://localhost:3000/passwordreset/";
 // Exports
 module.exports = (app) => {
   // Routes
@@ -117,7 +119,7 @@ module.exports = (app) => {
           if (err) {
             //res.status(400);
             return res.json({ success: false, msg: 'Email already exists. Please sign in or use another email.' });
-            
+
           }
           res.json({ success: true, msg: 'Successful created new user.' });
         });
@@ -125,14 +127,14 @@ module.exports = (app) => {
   });
 
   //Login as a voter
-  app.post('/login', function(req, res) {
+  app.post('/login', function (req, res) {
     db.Voter.findOne({
       username: req.body.username
-    }, function(err, user) {
+    }, function (err, user) {
       if (err) throw err;
-  
+
       if (!user) {
-        res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
+        res.status(401).send({ success: false, msg: 'Authentication failed. User not found.' });
       } else {
         // check if password matches
         user.comparePassword(req.body.password, function (err, isMatch) {
@@ -140,9 +142,9 @@ module.exports = (app) => {
             // if user is found and password is right create a token
             var token = jwt.sign(user.toJSON(), settings.secret);
             // return the information including token as JSON
-            res.json({success: true, token: 'JWT ' + token, _id:user._id});
+            res.json({ success: true, token: 'JWT ' + token, _id: user._id });
           } else {
-            res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+            res.status(401).send({ success: false, msg: 'Authentication failed. Wrong password.' });
           }
         });
       }
@@ -164,21 +166,96 @@ module.exports = (app) => {
       .findOneAndUpdate({ _id: req.params.id }, req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
-  })
+  });
+
+  //Password reset info
+  app.post("/sendPassEmail", function (req, res) {
+    console.log("sendPassRout", req.body.email)
+    db.Voter.findOne({
+      // where: {
+      "username": req.body.email
+      // id: req.user.id
+
+      // }
+    })
+      .then(dbUser => {
+        console.log("User from db:  ", dbUser)
+        if (dbUser) {
+
+
+
+          var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'votenow2121@gmail.com',
+              pass: 'Jjh@5682'
+            }
+          });
+          var url = serverUrl + req.body.email;
+          var mailOptions = {
+            from: 'votenow2121@gmail.com',
+            to: req.body.email,
+            subject: 'PASSWORD RESET',
+            html: "We received a request to reset the password for the Vote Now account associated with this e-mail address. If you made this request, please click <a href='" + url + "'>here</a><br/>If you did not request to have your password reset you can safely ignore this email.<br/><br/>Regards,<br/><br/>Vote Now"
+          };
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            console.log('SEND TO EMAIL');
+            if (error) {
+              console.log('WHY IS THERE AN ERROR', error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
+          res.json({
+            "Success": "Email Sent Successfully."
+          })
+
+
+        } else {
+          res.json({
+            message: 'This username is already taken.'
+          });
+        }
+      }).catch(function (err) {
+        console.log(err);
+      });
+
+  });
+
+  app.post('/passwordreset/savePass', function (req, res) {
+    console.log(req.body);
+    var username = req.body.email
+    var salt = bcrypt.genSaltSync(10);
+    var pass = bcrypt.hashSync(req.body.password, salt);
+    db.Voter
+      .update({ 'username': username }, { $set: { 'password': pass } }, function (err, results) {
+        if (err) {
+          console.log("err update", err)
+          res.status(401).send({ success: false, msg: 'Can not save password.' });
+        }
+        else {
+          res.status(200).send({ success: true, msg: 'Password changed successfully.' });
+        }
+      })
+
+  });
 
   // Save a new Podcast to the db and associating it with a Voter
-  app.post("/podcast/:podcastId/:voterId", function(req, res) {
+  app.post("/podcast/:podcastId/:voterId", function (req, res) {
     // If podcast not in db then create a new podcast
     db.Podcast.create(req.body)
-    // db.Podcast.findOneAndUpdate({podcastId:req.params.podcastId},req.body,{upsert:true, returnNewDocument:true})
+      // db.Podcast.findOneAndUpdate({podcastId:req.params.podcastId},req.body,{upsert:true, returnNewDocument:true})
       .then(dbPodcast => {
-        return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $push: { podcasts: dbPodcast._id } }, { new: true });
+        return db.Voter.findOneAndUpdate({ _id: req.params.voterId }, { $push: { podcasts: dbPodcast._id } }, { new: true });
       })
       .then(dbVoter => res.json(dbVoter))
       .catch(err => res.status(422).json(err));
-    });
+  });
 
   // Remove podcast from voter's list
+
+
   app.put("/podcast/:podcastId/:voterId", function(req, res) {
     console.log('We are here!')
     return db.Voter.findOneAndUpdate({_id:req.params.voterId}, { $pull: { podcasts: req.params.podcastId}}, (err, doc) => {})

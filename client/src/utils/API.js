@@ -62,5 +62,14 @@ export default {
   // Remove podcast
   removePodcast: function(podcastId,voterId) {
     return axios.put(`/podcast/${podcastId}/${voterId}`)
-  }
+  },
+   // Send Email
+ sendPassEmail: function(emailobj){
+  console.log("sending an email to server")
+  return axios.post("/sendPassEmail", emailobj)
+},
+//Reset Password
+sendChangePass: function(passobj){
+  return axios.post('/passwordreset/savePass',passobj)
+  },
 };
