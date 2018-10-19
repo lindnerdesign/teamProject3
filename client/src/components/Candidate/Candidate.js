@@ -13,7 +13,7 @@ const Candidate = props => (
         <Row>
         {props.candidates.map (candidate => (
           candidate.electionDistrictId === district && (
-          <Col key={candidate.candidateId} xs={12} sm={6} md={3} className="candidatemap">
+          <Col xs={12} sm={6} md={3} key={candidate.candidateId} className="candidatemap" >
               <img src={candidate.photo ? candidate.photo : "../../candidate-holder.jpg"} alt="242x200" className="candidateimg" height="250" />
               <h3>{candidate.ballotName}</h3>
               <p className="candidatep"><strong>Office:</strong> {candidate.electionOffice}</p>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./NavBar.css";
-import { Navbar, Button } from "react-bootstrap";
+import { Navbar, Button, NavItem, Nav} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 class NavBar extends Component {
@@ -23,7 +23,8 @@ class NavBar extends Component {
   };
 
   render() {
-    return (<Navbar fluid inverse fixedTop>
+    return (
+    <Navbar fluid inverse fixedTop>
       <Navbar.Header>
         <Navbar.Brand>
           <a href="/">VOTE NOW</a>
@@ -32,11 +33,16 @@ class NavBar extends Component {
       </Navbar.Header>
 
       <Navbar.Collapse>
+        <Nav>
+          <NavItem eventKey={1}>
+              <b>{this.state.plocationName}</b> 
+          </NavItem>
+        </Nav>
+
         <Navbar.Form pullRight>
           <span className="loginUser">
             {this.props.loggedIn ? `Hi ${this.props.userName}` : null}
           </span>
-
           {this.props.loggedIn && this.props.userName 
           ? (<Link to="/">
             <Button bsStyle="danger" onClick={this.logout}>Sign Out</Button>

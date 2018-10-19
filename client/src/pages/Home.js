@@ -32,7 +32,6 @@ class Home extends Component {
     pzip: "",
 
     loggedIn:false,
-    message: "",
     podcasts: [],
     savedPodcasts: [],
 
@@ -217,21 +216,20 @@ class Home extends Component {
   savePodcast = podcastObj => {
     // Save podcast, pass voter._id to save to voter document
     console.log(`save podcast: `, podcastObj)
-    console.log(`this._id: `, this._id)
     API.savePodcast(podcastObj,this._id)
       .then(podcastDB => {
-        console.log(`Save podcastDB: `, podcastDB)
-        this.setState({savedPodcasts:podcastDB.data.podcasts})
+        console.log(`podcastDB: `, podcastDB)
+        this.setState({savedPodcasts:podcastDB})
       })
   }
 
   // Remove podcast from voter's podcast list
   removePodcast = id => {
-    console.log(`remove podcast id: `, this._id)
+    console.log(`remove podcast`)
     API.removePodcast(id,this._id)
       .then(voterDB => {
-        this.setState({savedPodcasts:voterDB.data.podcasts})
-        console.log(`Remove podcast: `, voterDB)
+        // this.setState({savedPodcasts:voterDB.data.podcasts})
+        console.log(`remove: `, voterDB)
       })
   }
 
@@ -268,15 +266,8 @@ class Home extends Component {
     // console.log(`this.candidates: `, this.candidates)
     const arr = this.candidates.filter(this.filterByOfficeId)
     console.log(`arr: `, arr)
-    if (arr.length) {
-      this.getDistrictIds(arr);
-      this.setState({contest:arr});
-      this.setState({message: ""}); // Clear message
-    }
-    else {
-      this.setState({ message: `Contest not on the ballot this election in your district.` });
-      this.setState({contest: []}) // Clear contest array
-    }
+    this.getDistrictIds(arr);
+    this.setState({contest:arr});
   }
 
   // Google API candidate list - Do we want to harvest any info from here? Remove?
@@ -322,9 +313,8 @@ class Home extends Component {
       <NavBar loggedIn = {this.state.loggedIn} userName = {this.state.firstName}/>
       </Row>
         <Row className="voteSearch">
-          <Col size="12">
-
-            <SearchForm
+          <Col>
+            <SearchForm 
               line1={this.state.line1}
               city={this.state.city}
               state={this.state.state}
@@ -335,36 +325,41 @@ class Home extends Component {
               updateVoter={this.updateVoter}
             ></SearchForm>
           </Col>
-        </Row>
+      </Row>
+      
+      <Row className="newDiv">
         {this.state.plocationName ? 
-        <Row>
-          <Col xs={12} sm={8} md={8}>
+          <Col s={12} sm={4} md={4}>
             <div className="pollresults">
-              <strong>Your Polling Place:</strong>
-              <p><b>{this.state.plocationName}:</b> {this.state.pline1}, {this.state.pcity}, {this.state.zip}</p>
+              <h3 className="pollTitle text-center">Your Polling Place:</h3>
+              <p className="text-center ">
+              <b>{this.state.plocationName}:<br /> </b> 
+              {this.state.pline1}<br />
+              {this.state.pcity} 
+              {this.state.zip}</p>
             </div>
           </Col>
-        </Row>
-        : null}
+          : null}
+        
         {/* Test Form & Buttons */}
-        <Row className="voteSearch">
-          <Col xs={12} sm={8} md={8}>
-        <div className="">
-        {this.state.message !== '' &&
-          <div className="alert alert-danger alert-dismissible" role="alert">
-            {this.state.message}
-          </div>
+
+        <Col s={12} sm={4} md={4} className="voteSearch text-center">
+
+          <div className="">
+            {this.state.message !== '' &&
+              <div className="alert alert-danger alert-dismissible" role="alert">
+                {this.state.message}
+              </div>
         }
         </div>
-
-            <form style={this.testStyle}>
-              <h3 htmlFor="testForm">Select Contest</h3>
+            <form>
+              <h3 htmlFor="testForm" className="text-center">Select Contest</h3>
               <select 
                 value={this.state.officeId}
                 onChange={this.handleInputChange}
                 //onSelect={this.candidateByOffice}
                 name="officeId"
-                className="form-control" id="testForm"
+                className="form-control text-center" id="testForm"
               >
                 <option value={6}>U.S. Senator</option>
                 <option value={5}>U.S. Representative</option>
@@ -375,7 +370,9 @@ class Home extends Component {
                 <option value={44}>Secretary of State</option>
               </select>
             </form>
-            <div style={this.testStyle}>
+            </Col>
+
+            <Col s={12} sm={3} md={3} className="newPods">
               {/* <Button
                 onClick={this.testCandidate}
                 bsStyle={"primary"}
@@ -389,15 +386,17 @@ class Home extends Component {
               >
                 Test Update Voter Info
               </Button> */}
+              <h3 className="text-center">New Podcasts</h3>
               <Button
                 onClick={this.testListenNotes}
-                bsStyle={"success"}
+                bsStyle={"danger"}
+                className="center-block"
               >
-                Get New Podcasts
+                Get Podcasts
               </Button>
-            </div>
+            </Col>
             {/* End of Test Stuff */}
-          </Col>
+          
         </Row>
 
         <Row>

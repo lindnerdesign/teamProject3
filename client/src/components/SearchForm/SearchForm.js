@@ -51,7 +51,7 @@ const SearchForm = props => (
       <button
         type="submit"
         onClick={props.handleFormSubmit}
-        className="btn btn-success searchbtn"
+        className="btn btn-danger searchbtn"
       >
         Search
       </button>
@@ -70,7 +70,7 @@ const SearchForm = props => (
   </Col >
 
   <Col xs={12} sm={2} md={2}>
-  <MediaQuery minWidth={775}>
+  <MediaQuery minWidth={768}>
     <Image className="pollingimg" src="/polling.png" />
   </MediaQuery>
   </Col>

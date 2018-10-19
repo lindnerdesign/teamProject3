@@ -8,13 +8,7 @@
 }
 
 .candidatep {
-  line-height: .75em;
-}
-
-.addressheader {
-  padding: 15px;
-  margin: 0 100px 0 100px;
-  border-bottom: 1px solid lightgray;
+  line-height: 1.2em;
 }
 
 .subhead {
@@ -23,5 +17,22 @@
 }
 
 .candidatemap {
-  padding: 15px 35px 0 35px;
+  padding: 5px 35px 0 35px;
+  margin-bottom: 50px;
+  height: 440px;
+}
+
+@media only screen and (max-width: 600px) {
+
+  .candidatemap {
+    padding: 5px 100px 0 115px;
+    margin: 0px 0px 10px 0px;
+    align-content: center;
+  }
+
+  .candidatep {
+      line-height: 1.2em;
+  }
+
+
 }

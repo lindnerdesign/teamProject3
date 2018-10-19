@@ -6,6 +6,7 @@
   align-content: center;
   margin-top: 10%;
   padding: 0 35px 0 35px;
+  height: 450px;
 }
 
 .searchbtn {
@@ -18,4 +19,13 @@
     background: #fff;
     overflow-y: scroll;
     margin-bottom: 25px;
+}
+
+@media only screen and (max-width: 600px) {
+  .podcastmap {
+    align-content: center;
+    margin: 0 0 10% 0;
+    padding: 0 35px 0 35px;
+    height: 450px;
+  }
 }
