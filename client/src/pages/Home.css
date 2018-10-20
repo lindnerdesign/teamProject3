@@ -12,6 +12,11 @@
     margin: 0 0 0 0;
   }
 
+.voteAlert {
+    width: 50%;
+    margin: auto;
+}
+
   #testForm {
     align-content: center;
     margin-left: 10%;
