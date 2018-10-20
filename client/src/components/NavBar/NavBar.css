@@ -1,0 +1,32 @@
+#nav {
+width: auto;
+margin-bottom: 0px;
+}
+
+/* unvisited link */
+.navlink a:link {
+    color: white;
+}
+
+/* visited link */
+.navlink a:visited {
+    color: whitesmoke;
+}
+
+/* mouse over link */
+.navlink a:hover {
+    color: #2d71b5;
+}
+
+/* selected link */
+.navlink a:active {
+    color: whitesmoke;
+}
+
+.dropdown a:link{
+    color: grey;
+}
+.loginUser{
+    color: whitesmoke;
+    margin-right: 5px
+}
