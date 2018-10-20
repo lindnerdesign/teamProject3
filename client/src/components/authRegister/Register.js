@@ -102,6 +102,7 @@ class Create extends Component {
                   type="text"
                   className="form-control register"
                   placeholder="First Name"
+                  required
                 />
                 <input
                   value={this.state.lastName}
@@ -110,6 +111,7 @@ class Create extends Component {
                   type="text"
                   className="form-control register"
                   placeholder="Last Name"
+                  required
                 />
                 <input
                   value={this.state.line1}
@@ -143,6 +145,7 @@ class Create extends Component {
                   type="text"
                   className="form-control register"
                   placeholder="ZIP Code"
+                  required
                 />
                 <input id="email"
                   type="email"
