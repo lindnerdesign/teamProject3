@@ -10,8 +10,8 @@ const SearchForm = props => (
   <Row id="searchdiv">
   <Col xs={12} sm={8} md={8}>
   <form>
-    <div className="form-group search">
-      <h3 htmlFor="fulladdress">Please fill out your address here</h3>
+    <div className="search">
+      <h3 >Please fill out your address here</h3>
       <input
         value={props.line1}
         onChange={props.handleInputChange}

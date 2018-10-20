@@ -32,6 +32,7 @@ class Home extends Component {
     pzip: "",
 
     loggedIn:false,
+    message: "",
     podcasts: [],
     savedPodcasts: [],
 
@@ -216,10 +217,11 @@ class Home extends Component {
   savePodcast = podcastObj => {
     // Save podcast, pass voter._id to save to voter document
     console.log(`save podcast: `, podcastObj)
+    console.log(`this._id: `, this._id)
     API.savePodcast(podcastObj,this._id)
       .then(podcastDB => {
-        console.log(`podcastDB: `, podcastDB)
-        this.setState({savedPodcasts:podcastDB})
+        console.log(`Save podcastDB: `, podcastDB)
+        this.setState({savedPodcasts:podcastDB.data.podcasts})
       })
   }
 
@@ -261,14 +263,21 @@ class Home extends Component {
     console.log(`uniqueDistricts: `, this.uniqueDistricts);
   }
 
-  // Get candidates by office - display an individual contest - used with VoteSmart API
-  candidateByOffice = () => {
-    // console.log(`this.candidates: `, this.candidates)
-    const arr = this.candidates.filter(this.filterByOfficeId)
-    console.log(`arr: `, arr)
-    this.getDistrictIds(arr);
-    this.setState({contest:arr});
-  }
+    // Get candidates by office - display an individual contest - used with VoteSmart API
+    candidateByOffice = () => {
+      // console.log(`this.candidates: `, this.candidates)
+      const arr = this.candidates.filter(this.filterByOfficeId)
+      console.log(`arr: `, arr)
+      if (arr.length) {
+        this.getDistrictIds(arr);
+        this.setState({contest:arr});
+        this.setState({message: ""}); // Clear message
+      }
+      else {
+        this.setState({ message: `Contest not on ballot` });
+        this.setState({contest: []}) // Clear contest array
+      }
+    }
 
   // Google API candidate list - Do we want to harvest any info from here? Remove?
   testCandidate = (event) => {
@@ -286,12 +295,13 @@ class Home extends Component {
   handleInputChange = event => {
     console.log(event.target.name);
     if(event.target.name ==='officeId'){
-      const { name, value } = event.target;
-      this.setState({
-        [name]: value
-      },
-      ()=>{this.candidateByOffice()});
-      
+        if (this.state.zip.length === 5) {
+        const { name, value } = event.target;
+        this.setState({
+          [name]: value
+        },
+        ()=>{this.candidateByOffice()});
+      } 
     }else{
       const { name, value } = event.target;
       this.setState({
@@ -302,7 +312,9 @@ class Home extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    this.getInfo();
+    {this.state.zip.length === 5 ? 
+      this.getInfo()
+    : null}
   };
 
   render() {
@@ -328,36 +340,36 @@ class Home extends Component {
       </Row>
       
       <Row className="newDiv">
-        {this.state.plocationName ? 
           <Col s={12} sm={4} md={4}>
             <div className="pollresults">
               <h3 className="pollTitle text-center">Your Polling Place:</h3>
+              {this.state.plocationName ? 
               <p className="text-center ">
-              <b>{this.state.plocationName}:<br /> </b> 
-              {this.state.pline1}<br />
-              {this.state.pcity} 
-              {this.state.zip}</p>
+                <b>{this.state.plocationName}:<br /> </b> 
+                {this.state.pline1}<br />
+                {this.state.pcity} 
+                {this.state.zip}</p>
+              : 
+                <p className="text-center" >Enter Your Address</p>}
             </div>
           </Col>
-          : null}
         
         {/* Test Form & Buttons */}
 
         <Col s={12} sm={4} md={4} className="voteSearch text-center">
-
-          <div className="">
+          {/* Alert div */}
+          <div className="voteAlert">
             {this.state.message !== '' &&
               <div className="alert alert-danger alert-dismissible" role="alert">
                 {this.state.message}
               </div>
-        }
-        </div>
+            }
+          </div>
             <form>
               <h3 htmlFor="testForm" className="text-center">Select Contest</h3>
               <select 
                 value={this.state.officeId}
                 onChange={this.handleInputChange}
-                //onSelect={this.candidateByOffice}
                 name="officeId"
                 className="form-control text-center" id="testForm"
               >
