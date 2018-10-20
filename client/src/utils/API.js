@@ -4,7 +4,6 @@ import axios from "axios";
 axios.defaults.headers.common['Authorization'] = localStorage.getItem('jwtToken');
 export default {
   // VoteSmart api
-
   apiVoteSmart: function(query) {
     return axios.get("/voteSmart", {
       params: query
@@ -12,7 +11,6 @@ export default {
   },
   // Google Civic api
   apiCivic: function(address) {
-    console.log(address)
     return axios.get("/civic", {
       params: {
         address:address
@@ -23,23 +21,9 @@ export default {
     return axios.get("/listen");
   },
   // Database apis
-  // Gets voter info
-  getVoter: function(query) {
-    return axios.get("/voter", {
-      params:query
-    });
-  },
   // Find voter info with the given _id
   getVoterById: function(id) {
     return axios.get(`/voter/${id}`);
-  },
-  // Deletes voter info with the given _id - Remove?
-  deleteVoter: function(id) {
-    return axios.delete(`{/voter/${id}`);
-  },
-  // Saves a voter to the database - Remove?
-  saveVoter: function(voterData) {
-    return axios.post("/voter", voterData);
   },
   // Update voter info
   updateVoter: function(id,voterData){
@@ -52,7 +36,7 @@ export default {
   },
   // Login voter
   loginVoter: function(loginData){
-    console.log(`login `, loginData);
+    // console.log(`login `, loginData);
     return axios.post("/login", loginData);
   },
   // Save podcast
@@ -63,13 +47,13 @@ export default {
   removePodcast: function(podcastId,voterId) {
     return axios.put(`/podcast/${podcastId}/${voterId}`)
   },
-   // Send Email
- sendPassEmail: function(emailobj){
-  console.log("sending an email to server")
-  return axios.post("/sendPassEmail", emailobj)
-},
-//Reset Password
-sendChangePass: function(passobj){
-  return axios.post('/passwordreset/savePass',passobj)
+  // Send Email
+  sendPassEmail: function(emailobj){
+    console.log("sending an email to server")
+    return axios.post("/sendPassEmail", emailobj)
+  },
+  //Reset Password
+    sendChangePass: function(passobj){
+    return axios.post('/passwordreset/savePass',passobj)
   },
 };

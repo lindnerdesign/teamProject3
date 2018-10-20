@@ -8,6 +8,8 @@ import NavBar from "../components/NavBar";
 import {Row, Col, Button} from "react-bootstrap";
 import './Home.css';
 
+const zipLength = 5;
+
 class Home extends Component {
   stageId = "G"; // Set to General Election
   username = "";
@@ -42,23 +44,17 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    console.log(`did`)
     this._id = window.sessionStorage.getItem("_id");
-    console.log(`id`, this._id)
-    this.loadVoter()
-    .then(res => {
-      this.getInfo()
-    })
+    if (this._id) this.loadVoter()
+    .then(res => this.getInfo())
   }
 
   componentDidUpdate() {
     this.username = window.sessionStorage.getItem("username");
     if (this.username && !this.state.username) {
-      console.log(`username:`, this.username)
       this.setState({username:this.username})
       this.setState({loggedIn:true})
       this._id = window.sessionStorage.getItem("_id");
-      console.log(`will`)
     }
   }
 
@@ -68,11 +64,9 @@ class Home extends Component {
 
   callCivic = () => {
     const address = `${this.state.line1} ${this.state.city} ${this.state.state} ${this.state.zip}`
-    console.log(address)
     // Get polling location address
     API.apiCivic(address)
       .then(res => {
-        // console.log(`Google Civic result: `, res)
         if (res.data.hasOwnProperty("pollingLocations")) {
           // Save polling address to state
           this.setState({
@@ -83,8 +77,6 @@ class Home extends Component {
             pzip: res.data.pollingLocations[0].address.zip,
             contests: res.data.contests
           })
-          console.log(` Your polling place: `, res.data.pollingLocations[0].address)
-          console.log(`Your contests`, res.data.contests)
         }
         else {
           console.log("Polling location not available")
@@ -107,8 +99,6 @@ class Home extends Component {
     this.callCivic();
     this.getCandidates(this.state.zip, this.stageId)
     .then(res => {
-      // console.log(`candidates by zip: `, res)
-      // If candidate list != 0, parse response into an object
       if (res.data.candidateList.candidate.length) {
         this.parseCandidates(res.data.candidateList.candidate)
       }
@@ -153,7 +143,6 @@ class Home extends Component {
         })
     })
     return Promise.all(pCandidates).then(data => {
-      console.log(`pCandidates: `, data)
       // Save the candidate list to state
       this.candidates = data;
       this.candidateByOffice()
@@ -171,30 +160,25 @@ class Home extends Component {
 
   // Find voter by id
   getVoter = (id) => {
-    console.log(`getVoter id`, id)
     return API.getVoterById(id)
   }
 
   // Get voter information and set state variables
   loadVoter = () => {
-    console.log(`loadVoter start _id:`,this._id)
     return this.getVoter(this._id)
       .then(voterDB => {
-        console.log(`loadVoter: `, voterDB)
         // If voter found in db, set state variables
-        // if (voterDB.data.length) {
-          // this._id = voterDB.data[0]._id;
-          this.setState({
-            firstName: voterDB.data.firstName,
-            lastName: voterDB.data.lastName,
-            line1: voterDB.data.address.line1,
-            city: voterDB.data.address.city,
-            state: voterDB.data.address.state,
-            zip: voterDB.data.address.zip,
-            savedPodcasts: voterDB.data.podcasts
-          });
-        
-          sessionStorage.setItem('firstName', voterDB.data.firstName);
+        this.setState({
+          firstName: voterDB.data.firstName,
+          lastName: voterDB.data.lastName,
+          line1: voterDB.data.address.line1,
+          city: voterDB.data.address.city,
+          state: voterDB.data.address.state,
+          zip: voterDB.data.address.zip,
+          savedPodcasts: voterDB.data.podcasts
+        });
+      
+        sessionStorage.setItem('firstName', voterDB.data.firstName);
       })
   }
 
@@ -217,7 +201,6 @@ class Home extends Component {
   savePodcast = podcastObj => {
     // Save podcast, pass voter._id to save to voter document
     console.log(`save podcast: `, podcastObj)
-    console.log(`this._id: `, this._id)
     API.savePodcast(podcastObj,this._id)
       .then(podcastDB => {
         console.log(`Save podcastDB: `, podcastDB)
@@ -227,12 +210,8 @@ class Home extends Component {
 
   // Remove podcast from voter's podcast list
   removePodcast = id => {
-    console.log(`remove podcast`)
     API.removePodcast(id,this._id)
-      .then(voterDB => {
-        // this.setState({savedPodcasts:voterDB.data.podcasts})
-        console.log(`remove: `, voterDB)
-      })
+      .then(voterDB => this.setState({savedPodcasts:voterDB.data.podcasts}))
   }
 
   // Return an array of candidates for a specific contest (i.e. Senate) - Used with Google Civic API
@@ -260,14 +239,11 @@ class Home extends Component {
     })
     // Remove duplicates from array
     this.uniqueDistricts = this.arrayUnique(districts);
-    console.log(`uniqueDistricts: `, this.uniqueDistricts);
   }
 
     // Get candidates by office - display an individual contest - used with VoteSmart API
     candidateByOffice = () => {
-      // console.log(`this.candidates: `, this.candidates)
       const arr = this.candidates.filter(this.filterByOfficeId)
-      console.log(`arr: `, arr)
       if (arr.length) {
         this.getDistrictIds(arr);
         this.setState({contest:arr});
@@ -279,23 +255,15 @@ class Home extends Component {
       }
     }
 
-  // Google API candidate list - Do we want to harvest any info from here? Remove?
+  // Google API candidate list - For future use to harvest more candidate info
   testCandidate = (event) => {
-    // test get candidate info
     const contestArr = this.state.contests.filter(this.filterByContest)
     console.log(`contestArr: `, contestArr)
   }
 
-  testStyle = {
-    width: "50%",
-    marginLeft: "15%",
-    float: "left"
-  }
-  
   handleInputChange = event => {
-    console.log(event.target.name);
     if(event.target.name ==='officeId'){
-        if (this.state.zip.length === 5) {
+        if (this.state.zip.length === zipLength) {
         const { name, value } = event.target;
         this.setState({
           [name]: value
@@ -312,16 +280,17 @@ class Home extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.zip.length === 5) this.getInfo()
+    if (this.state.zip.length === zipLength) this.getInfo()
   };
 
   render() {
     return (
 
-      <div className="test">
-      <Row className="voteSearch">
-      <NavBar loggedIn = {this.state.loggedIn} userName = {this.state.firstName}/>
-      </Row>
+      <div className="Main">
+        <Row className="voteSearch">
+        <NavBar loggedIn = {this.state.loggedIn} userName = {this.state.firstName}/>
+        </Row>
+
         <Row className="voteSearch">
           <Col>
             <SearchForm 
@@ -335,9 +304,10 @@ class Home extends Component {
               updateVoter={this.updateVoter}
             ></SearchForm>
           </Col>
-      </Row>
+        </Row>
       
-      <Row className="newDiv">
+        {/* Display Polling Location */}
+        <Row className="newDiv">
           <Col s={12} sm={4} md={4}>
             <div className="pollresults">
               <h3 className="pollTitle text-center">Your Polling Place:</h3>
@@ -352,17 +322,16 @@ class Home extends Component {
             </div>
           </Col>
         
-        {/* Test Form & Buttons */}
-
-        <Col s={12} sm={4} md={4} className="voteSearch text-center">
-          {/* Alert div */}
-          <div className="voteAlert">
-            {this.state.message !== '' &&
-              <div className="alert alert-danger alert-dismissible" role="alert">
-                {this.state.message}
-              </div>
-            }
-          </div>
+          {/* Alert & Form to select election contest */}
+          <Col s={12} sm={4} md={4} className="voteSearch text-center">
+            {/* Alert div */}
+            <div className="voteAlert">
+              {this.state.message !== '' &&
+                <div className="alert alert-danger alert-dismissible" role="alert">
+                  {this.state.message}
+                </div>
+              }
+            </div>
             <form>
               <h3 htmlFor="testForm" className="text-center">Select Contest</h3>
               <select 
@@ -380,35 +349,22 @@ class Home extends Component {
                 <option value={44}>Secretary of State</option>
               </select>
             </form>
-            </Col>
-
-            <Col s={12} sm={3} md={3} className="newPods">
-              {/* <Button
-                onClick={this.testCandidate}
-                bsStyle={"primary"}
-              >
-                Get Google Civic Candidates
-              </Button> */}
-
-              {/* <Button
-                onClick={this.updateVoter}
-                bsStyle={"primary"}
-              >
-                Test Update Voter Info
-              </Button> */}
-              <h3 className="text-center">New Podcasts</h3>
-              <Button
-                onClick={this.testListenNotes}
-                bsStyle={"danger"}
-                className="center-block"
-              >
-                Get Podcasts
-              </Button>
-            </Col>
-            {/* End of Test Stuff */}
+          </Col>
           
+          {/* Request new podcasts */}
+          <Col s={12} sm={3} md={3} className="newPods">
+            <h3 className="text-center">New Podcasts</h3>
+            <Button
+              onClick={this.testListenNotes}
+              bsStyle={"danger"}
+              className="center-block"
+            >
+              Get Podcasts
+            </Button>
+          </Col>
         </Row>
 
+        {/* Display candidates for selected contest */}
         <Row>
           <Col size="12">
             {/* Render only if there are candidates */}
@@ -422,6 +378,7 @@ class Home extends Component {
           </Col>
         </Row>
 
+        {/* Display Save Podcasts */}
         <Row className="votePodcast">
           <Col size="12">
             {/* Render only if there are saved podcasts */}
@@ -431,6 +388,7 @@ class Home extends Component {
           </Col>
         </Row>
 
+        {/* Display New Podcasts */}
         <Row className="votePodcast">
           <Col size="12">
             {/* Render only if there are new podcasts */}
