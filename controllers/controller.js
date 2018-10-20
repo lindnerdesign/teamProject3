@@ -203,7 +203,7 @@ module.exports = (app) => {
   // Save a new Podcast to the db and associating it with a Voter
   app.post("/podcast/:podcastId/:voterId", function (req, res) {
     // If podcast not in db then create a new podcast
-    db.Podcast.findOneAndUpdate({ podcastId: req.params.podcastId }, req.body, { upsert: true, returnNewDocument: true })
+    db.Podcast.findOneAndUpdate({ podcastId: req.params.podcastId }, req.body, { upsert: true, new: true })
       .then(dbPodcast => {
         console.log(`Save: dbPodcast`)
         console.log(JSON.stringify(dbPodcast))
@@ -219,7 +219,7 @@ module.exports = (app) => {
     return db.Voter.findOneAndUpdate(
       { _id: req.params.voterId }, 
       { $pull: { podcasts: req.params.podcastId } }, 
-      {returnNewDocument: true},
+      {new: true},
       (err, doc) => { })
       .populate("podcasts")
       .then(dbVoter => res.json(dbVoter))
