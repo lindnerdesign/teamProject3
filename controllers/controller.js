@@ -18,7 +18,7 @@ module.exports = (app) => {
 
   // Vote Smart Route
   app.get("/voteSmart", function (req, res) {
-    let query = `http://api.votesmart.org/${req.query.command}`;
+    let query = `https://api.votesmart.org/${req.query.command}`;
 
     // Convert query.params to an object, combine two objects to create new params object for api query
     const params = { "key": keysFile.votesmart.key, ...JSON.parse(req.query.params) }
