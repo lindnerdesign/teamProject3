@@ -146,14 +146,14 @@ module.exports = (app) => {
             }
           });
           //get host from request
-          var hostname = req.get('host');
+          var hostname = "https://"+req.get('host');
 
           if(app.get('env')==='development'){
-             hostname = 'localhost:3000';
+             hostname = 'http://localhost:3000';
           }
            
           console.log(app.get('env'));
-          var url = req.protocol + '://' + hostname + pageUrl + req.body.email;
+          var url = hostname + pageUrl + req.body.email;
          
           console.log(url);
           var mailOptions = {
