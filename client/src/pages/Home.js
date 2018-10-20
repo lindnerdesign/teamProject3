@@ -45,7 +45,7 @@ class Home extends Component {
 
   componentDidMount() {
     this._id = window.sessionStorage.getItem("_id");
-    if (this._id) this.loadVoter()
+    this.loadVoter()
     .then(res => this.getInfo())
   }
 
