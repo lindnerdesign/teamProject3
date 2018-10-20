@@ -27,7 +27,7 @@ const Podcast = props => (
             title:podcast.title_original,
             description:podcast.description_original,
             length:podcast.audio_length,
-            audio:podcast.audio_length
+            audio:podcast.audio
           })}
         >
         <i className="fas fa-plus-square"></i>
