@@ -312,9 +312,7 @@ class Home extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    {this.state.zip.length === 5 ? 
-      this.getInfo()
-    : null}
+    if (this.state.zip.length === 5) this.getInfo()
   };
 
   render() {
