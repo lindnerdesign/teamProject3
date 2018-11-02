@@ -89,7 +89,9 @@ class Home extends Component {
     API.apiListenNotes()
     .then(result => {
       console.log(`Listen Notes result: `, result)
-      this.setState({podcasts:result.data.results})
+      this.setState({podcasts:result.data.results},()=> {
+        window.location.href = window.location.href+'#newPodcasts'
+      })
     })
     .catch(err => console.log(err));
   };
@@ -389,7 +391,7 @@ class Home extends Component {
         </Row>
 
         {/* Display New Podcasts */}
-        <Row className="votePodcast">
+        <Row className="votePodcast" id="newPodcasts">
           <Col size="12">
             {/* Render only if there are new podcasts */}
             { this.state.podcasts.length > 0 &&

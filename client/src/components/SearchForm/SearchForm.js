@@ -9,7 +9,7 @@ const SearchForm = props => (
 <h1 className="addressheader text-center">Find your Polling Place and Candidates</h1>
   <Row id="searchdiv">
   <Col xs={12} sm={8} md={8}>
-  <form>
+  <form onSubmit={props.handleFormSubmit}>
     <div className="search">
       <h3 >Please fill out your address here</h3>
       <input
@@ -50,7 +50,6 @@ const SearchForm = props => (
       />
       <button
         type="submit"
-        onClick={props.handleFormSubmit}
         className="btn btn-danger searchbtn"
       >
         Search
