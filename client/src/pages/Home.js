@@ -317,8 +317,7 @@ class Home extends Component {
               <p className="text-center ">
                 <b>{this.state.plocationName}:<br /> </b> 
                 {this.state.pline1}<br />
-                {this.state.pcity} 
-                {this.state.zip}</p>
+                {this.state.pcity} {this.state.pstate} {this.state.zip}</p>
               : 
                 <p className="text-center" >Enter Your Address</p>}
             </div>

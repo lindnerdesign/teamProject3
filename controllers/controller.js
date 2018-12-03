@@ -35,13 +35,16 @@ module.exports = (app) => {
   });
 
   // Google Civic Route
+  // Note: Post 2018 election, added test electionId in order to keep polling location functionality.
+  // Google Civic API does not provide voterinfo for past elections.
   app.get("/civic", function (req, res) {
     let query = "https://www.googleapis.com/civicinfo/v2/voterinfo";
 
     axios.get(query, {
       params: {
         "key": keysFile.civic.key,
-        "address": req.query.address
+        "address": req.query.address,
+        "electionId": 2000 // Test electionId
       }
     }).then(result => {
       console.log('Civic')
