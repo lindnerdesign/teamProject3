@@ -145,8 +145,8 @@ class Home extends Component {
         })
     })
     return Promise.all(pCandidates).then(data => {
-      // Save the candidate list to state
-      this.candidates = data;
+      // Remove duplicates & save the candidate list to local variable
+      this.candidates = data.filter((object,index) => index === data.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)));
       this.candidateByOffice()
     })
   }
@@ -243,19 +243,19 @@ class Home extends Component {
     this.uniqueDistricts = this.arrayUnique(districts);
   }
 
-    // Get candidates by office - display an individual contest - used with VoteSmart API
-    candidateByOffice = () => {
-      const arr = this.candidates.filter(this.filterByOfficeId)
-      if (arr.length) {
-        this.getDistrictIds(arr);
-        this.setState({contest:arr});
-        this.setState({message: ""}); // Clear message
-      }
-      else {
-        this.setState({ message: `Contest not on ballot` });
-        this.setState({contest: []}) // Clear contest array
-      }
+  // Get candidates by office - display an individual contest - used with VoteSmart API
+  candidateByOffice = () => {
+    const arr = this.candidates.filter(this.filterByOfficeId)
+    if (arr.length) {
+      this.getDistrictIds(arr);
+      this.setState({contest:arr});
+      this.setState({message: ""}); // Clear message
     }
+    else {
+      this.setState({ message: `Contest not on ballot` });
+      this.setState({contest: []}) // Clear contest array
+    }
+  }
 
   // Google API candidate list - For future use to harvest more candidate info
   testCandidate = (event) => {
