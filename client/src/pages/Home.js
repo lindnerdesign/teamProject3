@@ -89,7 +89,9 @@ class Home extends Component {
     API.apiListenNotes()
     .then(result => {
       console.log(`Listen Notes result: `, result)
-      this.setState({podcasts:result.data.results})
+      this.setState({podcasts:result.data.results},()=> {
+        window.location.href = window.location.href+'#newPodcasts'
+      })
     })
     .catch(err => console.log(err));
   };
@@ -143,8 +145,8 @@ class Home extends Component {
         })
     })
     return Promise.all(pCandidates).then(data => {
-      // Save the candidate list to state
-      this.candidates = data;
+      // Remove duplicates & save the candidate list to local variable
+      this.candidates = data.filter((object,index) => index === data.findIndex(obj => JSON.stringify(obj) === JSON.stringify(object)));
       this.candidateByOffice()
     })
   }
@@ -241,19 +243,19 @@ class Home extends Component {
     this.uniqueDistricts = this.arrayUnique(districts);
   }
 
-    // Get candidates by office - display an individual contest - used with VoteSmart API
-    candidateByOffice = () => {
-      const arr = this.candidates.filter(this.filterByOfficeId)
-      if (arr.length) {
-        this.getDistrictIds(arr);
-        this.setState({contest:arr});
-        this.setState({message: ""}); // Clear message
-      }
-      else {
-        this.setState({ message: `Contest not on ballot` });
-        this.setState({contest: []}) // Clear contest array
-      }
+  // Get candidates by office - display an individual contest - used with VoteSmart API
+  candidateByOffice = () => {
+    const arr = this.candidates.filter(this.filterByOfficeId)
+    if (arr.length) {
+      this.getDistrictIds(arr);
+      this.setState({contest:arr});
+      this.setState({message: ""}); // Clear message
     }
+    else {
+      this.setState({ message: `Contest not on ballot` });
+      this.setState({contest: []}) // Clear contest array
+    }
+  }
 
   // Google API candidate list - For future use to harvest more candidate info
   testCandidate = (event) => {
@@ -315,8 +317,7 @@ class Home extends Component {
               <p className="text-center ">
                 <b>{this.state.plocationName}:<br /> </b> 
                 {this.state.pline1}<br />
-                {this.state.pcity} 
-                {this.state.zip}</p>
+                {this.state.pcity} {this.state.pstate} {this.state.zip}</p>
               : 
                 <p className="text-center" >Enter Your Address</p>}
             </div>
@@ -389,7 +390,7 @@ class Home extends Component {
         </Row>
 
         {/* Display New Podcasts */}
-        <Row className="votePodcast">
+        <Row className="votePodcast" id="newPodcasts">
           <Col size="12">
             {/* Render only if there are new podcasts */}
             { this.state.podcasts.length > 0 &&
