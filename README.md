@@ -7,7 +7,7 @@ A React.js application using components to build the UI, manages component state
 ## Description ##
 VOTE NOW is an application to encourage people to actively engage and participate in the elections by providing information about where to vote and a list of their candidates. VOTE NOW's helpful resources include podcasts and links to a variety of resources that allows them to make a educated and informed decision.
 
-Link to app: [VoteNow](https://morning-waters-46079.herokuapp.com/)
+Link to app: [VoteNow](https://immense-wave-55962.herokuapp.com/)
 
 **Frameworks**
 * Bootstrap
